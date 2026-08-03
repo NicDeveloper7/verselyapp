@@ -1,0 +1,98 @@
+import { PRICE } from "@/lib/pricing";
+import type { Campaign } from "./types";
+
+export const valentinesCampaign: Campaign = {
+  id: "valentines",
+  name: "Dia dos Namorados",
+  active: true,
+  schedule: { startMonthDay: "01-25", endMonthDay: "02-14" },
+  badge: "Especial dos Namorados",
+  whatsappMessage: `Olá! Vi a promoção do Dia dos Namorados (${PRICE}) e quero criar nossa música. ❤️`,
+  theme: {
+    blobPrimary: "bg-rose-600/25",
+    blobAccent: "bg-pink-400/25",
+    ribbonGradient: "from-rose-500 to-pink-400",
+    ribbonText: "text-rose-950",
+    bannerGradient: "from-rose-800 via-rose-700 to-pink-800",
+    albumPalette: [
+      "from-[#881337] via-[#E11D48] to-[#FDA4AF]",
+      "from-[#9F1239] via-[#F43F5E] to-[#FBCFE8]",
+      "from-[#701A32] via-[#DB2777] to-[#FBCFE8]",
+      "from-[#9D174D] via-[#EC4899] to-[#FECDD3]",
+    ],
+  },
+  hero: {
+    eyebrow: "Uma declaração de amor em forma de música",
+    headline: "Transforme Seu Amor em uma",
+    headlineHighlight: "Música Só Sua",
+    subheadline:
+      "Conte a história de vocês dois e receba uma música personalizada para celebrar esse amor.",
+    primaryCta: "Criar Nossa Música",
+    secondaryCta: "Ouvir Exemplos Românticos",
+    playerTitle: "Do Jeito Que Você É",
+    playerSubtitle: "A história de vocês, em música",
+  },
+  banner: {
+    icon: "❤️",
+    title: "Especial Dia dos Namorados",
+    message: "Peça hoje e surpreenda quem você ama com um presente inesquecível.",
+    ctaLabel: "Criar Agora",
+    countdownTarget: "2026-02-14T23:59:59-03:00",
+  },
+  collectionTitle: "Coleção Dia dos Namorados",
+  collectionSubtitle: "Músicas para declarar o que as palavras sozinhas não dão conta.",
+  songs: [
+    {
+      id: "vl1",
+      title: "Do Jeito Que Você É",
+      genre: "Balada Acústica",
+      duration: "3:01",
+      durationSeconds: 181,
+      lyricPreview: "\"Não preciso que mude nada / eu te quero exatamente do jeito que você é.\"",
+      description: "Uma canção simples e sincera sobre amar alguém por completo.",
+      badge: "Escolha da Equipe",
+    },
+    {
+      id: "vl2",
+      title: "Nosso Primeiro Encontro",
+      genre: "Pop Emocional",
+      duration: "2:53",
+      durationSeconds: 173,
+      lyricPreview: "\"Eu lembro exatamente da mesa, da luz, do seu sorriso nervoso.\"",
+      description: "Para reviver o dia em que tudo começou.",
+      badge: "Presente Mais Popular",
+    },
+    {
+      id: "vl3",
+      title: "Comigo Para Sempre",
+      genre: "R&B",
+      duration: "3:24",
+      durationSeconds: 204,
+      lyricPreview: "\"Não é sobre o tempo que já passou / é sobre todo o tempo que ainda vem.\"",
+      description: "Uma promessa em forma de canção, para selar o futuro de vocês dois.",
+    },
+  ],
+  testimonials: [
+    {
+      name: "Isabela Freitas",
+      location: "Rio de Janeiro, RJ",
+      initials: "IF",
+      rating: 5,
+      review: "Ele chorou no meio do jantar quando a música tocou. Foi o melhor presente que já dei.",
+    },
+    {
+      name: "Bruno Cardoso",
+      location: "Vitória, ES",
+      initials: "BC",
+      rating: 5,
+      review: "A letra parecia tirada direto das nossas conversas. Muito impressionante.",
+    },
+    {
+      name: "Aline Ferreira",
+      location: "Natal, RN",
+      initials: "AF",
+      rating: 5,
+      review: "Usamos como trilha do pedido de casamento. Não dava pra ser mais perfeito.",
+    },
+  ],
+};

@@ -1,0 +1,110 @@
+import { PRICE } from "@/lib/pricing";
+import type { Campaign } from "./types";
+
+export const mothersDayCampaign: Campaign = {
+  id: "mothers-day",
+  name: "Dia das Mães",
+  active: true,
+  schedule: { startMonthDay: "04-20", endMonthDay: "05-10" },
+  badge: "Especial Dia das Mães",
+  whatsappMessage: `Olá! Vi a promoção do Dia das Mães (${PRICE}) e quero criar a Música da Mamãe. 💐`,
+  theme: {
+    blobPrimary: "bg-rose-500/25",
+    blobAccent: "bg-amber-300/25",
+    ribbonGradient: "from-rose-400 to-amber-300",
+    ribbonText: "text-rose-950",
+    bannerGradient: "from-rose-700 via-rose-600 to-pink-700",
+    albumPalette: [
+      "from-[#9D174D] via-[#E11D48] to-[#F5D485]",
+      "from-[#BE185D] via-[#FB7185] to-[#FDE68A]",
+      "from-[#831843] via-[#DB2777] to-[#F5D485]",
+      "from-[#9F1239] via-[#F43F5E] to-[#FCD34D]",
+    ],
+  },
+  hero: {
+    eyebrow: "Uma homenagem sob medida para quem cuidou de tudo",
+    headline: "Dê à Mamãe um Presente",
+    headlineHighlight: "Que Ela Vai Guardar no Coração",
+    subheadline:
+      "Transforme suas memórias favoritas em uma música personalizada, feita só para ela.",
+    primaryCta: "Criar a Música da Mamãe",
+    secondaryCta: "Ouvir Exemplos do Dia das Mães",
+    playerTitle: "Suas Mãos, Meu Colo",
+    playerSubtitle: "Sua história com ela, em música",
+  },
+  banner: {
+    icon: "💐",
+    title: "Especial Dia das Mães",
+    message: "Peça hoje e crie um presente inesquecível para a sua mãe.",
+    ctaLabel: "Criar Agora",
+    countdownTarget: "2026-05-10T23:59:59-03:00",
+  },
+  collectionTitle: "Coleção Dia das Mães",
+  collectionSubtitle: "Músicas para agradecer a quem sempre esteve do seu lado.",
+  songs: [
+    {
+      id: "md1",
+      title: "Suas Mãos, Meu Colo",
+      genre: "Balada Acústica",
+      duration: "3:08",
+      durationSeconds: 188,
+      lyricPreview:
+        "\"Suas mãos cansadas nunca pararam de cuidar / hoje eu quero cuidar de você com essa canção.\"",
+      description: "Para a mãe que nunca mediu esforços, uma canção que devolve um pouco do carinho.",
+      badge: "Escolha da Equipe",
+    },
+    {
+      id: "md2",
+      title: "Minha Primeira Casa",
+      genre: "Pop Emocional",
+      duration: "2:56",
+      durationSeconds: 176,
+      lyricPreview:
+        "\"Antes de qualquer endereço, você já era o meu lugar seguro.\"",
+      description: "Uma canção sobre o lar que uma mãe carrega dentro de si.",
+      badge: "Presente Mais Popular",
+    },
+    {
+      id: "md3",
+      title: "Obrigado, Mãe",
+      genre: "Gospel",
+      duration: "3:22",
+      durationSeconds: 202,
+      lyricPreview: "\"Por cada noite em claro, por cada oração sussurrada — obrigado, mãe.\"",
+      description: "Uma canção de gratidão serena, perfeita para emocionar em família.",
+      badge: "Edição Limitada",
+    },
+    {
+      id: "md4",
+      title: "Sorriso Herdado",
+      genre: "Soul",
+      duration: "3:11",
+      durationSeconds: 191,
+      lyricPreview: "\"Eu vejo você quando me olho no espelho / e sorrio, porque é o seu sorriso ali.\"",
+      description: "Sobre tudo aquilo que aprendemos e herdamos, sem nem perceber.",
+    },
+  ],
+  testimonials: [
+    {
+      name: "Juliana Prado",
+      location: "Salvador, BA",
+      initials: "JP",
+      rating: 5,
+      review: "Minha mãe ouviu três vezes seguidas chorando. Foi o presente mais bonito que eu já dei.",
+    },
+    {
+      name: "Felipe Rocha",
+      location: "Fortaleza, CE",
+      initials: "FR",
+      rating: 5,
+      review: "Parecia que quem escreveu a letra conhecia a nossa história inteira. Impressionante.",
+    },
+    {
+      name: "Marina Costa",
+      location: "Campinas, SP",
+      initials: "MC",
+      rating: 5,
+      review: "Tocamos na festa e não sobrou olho seco na sala. Recomendo de olhos fechados.",
+    },
+  ],
+};

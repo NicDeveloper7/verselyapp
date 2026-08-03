@@ -1,0 +1,98 @@
+import { PRICE } from "@/lib/pricing";
+import type { Campaign } from "./types";
+
+export const christmasCampaign: Campaign = {
+  id: "christmas",
+  name: "Natal",
+  active: true,
+  schedule: { startMonthDay: "12-01", endMonthDay: "12-25" },
+  badge: "Especial de Natal",
+  whatsappMessage: `Olá! Vi a promoção de Natal (${PRICE}) e quero criar uma música personalizada. 🎄`,
+  theme: {
+    blobPrimary: "bg-emerald-600/25",
+    blobAccent: "bg-red-500/20",
+    ribbonGradient: "from-red-500 to-amber-400",
+    ribbonText: "text-red-950",
+    bannerGradient: "from-emerald-800 via-emerald-700 to-red-800",
+    albumPalette: [
+      "from-[#065F46] via-[#059669] to-[#D4AF37]",
+      "from-[#7F1D1D] via-[#DC2626] to-[#F5D485]",
+      "from-[#14532D] via-[#16A34A] to-[#EAB308]",
+      "from-[#991B1B] via-[#EF4444] to-[#FDE68A]",
+    ],
+  },
+  hero: {
+    eyebrow: "O presente que fica embaixo da árvore de todo coração",
+    headline: "Transforme o Natal em uma",
+    headlineHighlight: "Música Para Sempre",
+    subheadline:
+      "Conte a história da sua família e receba uma música de Natal personalizada e emocionante.",
+    primaryCta: "Criar Música de Natal",
+    secondaryCta: "Ouvir Exemplos de Natal",
+    playerTitle: "Luzes na Janela",
+    playerSubtitle: "Sua história de Natal, em música",
+  },
+  banner: {
+    icon: "🎄",
+    title: "Especial de Natal",
+    message: "Peça hoje e crie uma lembrança de Natal para guardar para sempre.",
+    ctaLabel: "Criar Agora",
+    countdownTarget: "2026-12-25T23:59:59-03:00",
+  },
+  collectionTitle: "Coleção de Natal",
+  collectionSubtitle: "Músicas para aquecer as festas de fim de ano.",
+  songs: [
+    {
+      id: "xm1",
+      title: "Luzes na Janela",
+      genre: "Balada Acústica",
+      duration: "3:05",
+      durationSeconds: 185,
+      lyricPreview: "\"As luzes piscam na janela, a família se reúne / mais um Natal, mais uma memória.\"",
+      description: "Uma canção aconchegante sobre as pequenas tradições que fazem o Natal especial.",
+      badge: "Escolha da Equipe",
+    },
+    {
+      id: "xm2",
+      title: "Ceia de Família",
+      genre: "Pop Emocional",
+      duration: "2:49",
+      durationSeconds: 169,
+      lyricPreview: "\"Em volta da mesa, todo mundo junto / é o único presente que eu realmente quero.\"",
+      description: "Para celebrar quem está à mesa nessa noite tão especial.",
+      badge: "Presente Mais Popular",
+    },
+    {
+      id: "xm3",
+      title: "Neve Que Nunca Vi",
+      genre: "Folk",
+      duration: "3:17",
+      durationSeconds: 197,
+      lyricPreview: "\"Mesmo sem neve no meu quintal, o Natal ainda chega no meu coração.\"",
+      description: "Uma canção nostálgica para quem celebra o Natal do jeito brasileiro.",
+    },
+  ],
+  testimonials: [
+    {
+      name: "Renata Vieira",
+      location: "Florianópolis, SC",
+      initials: "RV",
+      rating: 5,
+      review: "Tocamos na ceia e virou tradição na família. Já vamos pedir uma nova ano que vem.",
+    },
+    {
+      name: "Gustavo Farias",
+      location: "Goiânia, GO",
+      initials: "GF",
+      rating: 5,
+      review: "Foi o presente perfeito pra quem já tem tudo. Ninguém esperava por essa.",
+    },
+    {
+      name: "Patrícia Nunes",
+      location: "Brasília, DF",
+      initials: "PN",
+      rating: 5,
+      review: "Emocionou a família inteira, dos avós aos mais novos. Vale cada centavo.",
+    },
+  ],
+};
