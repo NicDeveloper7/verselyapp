@@ -17,9 +17,10 @@ const benefits = [
   "Um Presente Verdadeiramente Marcante",
 ];
 
-const DURATION = 198; // 3:18
+const SIMULATED_DURATION = 198; // 3:18, used only when no real song is available
 
 function formatTime(seconds: number) {
+  if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
   const m = Math.floor(seconds / 60);
   const s = Math.floor(seconds % 60);
   return `${m}:${s.toString().padStart(2, "0")}`;
@@ -28,10 +29,37 @@ function formatTime(seconds: number) {
 export function Hero({ campaign }: { campaign: Campaign }) {
   const [playing, setPlaying] = useState(false);
   const [elapsed, setElapsed] = useState(0);
+  const [realDuration, setRealDuration] = useState<number | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const raf = useRef<number | null>(null);
 
+  const heroSong = campaign.songs.find((s) => s.audioSrc) ?? null;
+
+  // Attach listeners once for the real <audio> element, if this campaign has one.
   useEffect(() => {
-    if (!playing) return;
+    const audio = audioRef.current;
+    if (!audio || !heroSong) return;
+
+    const onTimeUpdate = () => setElapsed(audio.currentTime);
+    const onEnded = () => {
+      setPlaying(false);
+      setElapsed(0);
+    };
+    const onLoadedMetadata = () => setRealDuration(audio.duration);
+
+    audio.addEventListener("timeupdate", onTimeUpdate);
+    audio.addEventListener("ended", onEnded);
+    audio.addEventListener("loadedmetadata", onLoadedMetadata);
+    return () => {
+      audio.removeEventListener("timeupdate", onTimeUpdate);
+      audio.removeEventListener("ended", onEnded);
+      audio.removeEventListener("loadedmetadata", onLoadedMetadata);
+    };
+  }, [heroSong]);
+
+  // Simulated waveform fallback for campaigns without a real song yet.
+  useEffect(() => {
+    if (heroSong || !playing) return;
     let last = performance.now();
 
     const tick = (now: number) => {
@@ -39,7 +67,7 @@ export function Hero({ campaign }: { campaign: Campaign }) {
       last = now;
       setElapsed((prev) => {
         const next = prev + delta;
-        if (next >= DURATION) {
+        if (next >= SIMULATED_DURATION) {
           setPlaying(false);
           return 0;
         }
@@ -52,10 +80,37 @@ export function Hero({ campaign }: { campaign: Campaign }) {
     return () => {
       if (raf.current) cancelAnimationFrame(raf.current);
     };
-  }, [playing]);
+  }, [heroSong, playing]);
 
-  const progress = (elapsed / DURATION) * 100;
+  const handleTogglePlay = () => {
+    if (playing) {
+      if (heroSong && audioRef.current) audioRef.current.pause();
+      setPlaying(false);
+      return;
+    }
+
+    setPlaying(true);
+
+    // Real playback: call play() synchronously inside the click handler so
+    // Safari/iOS doesn't silently block it (it requires the gesture-triggered
+    // call to happen synchronously, not inside a React effect).
+    if (heroSong && audioRef.current) {
+      const audio = audioRef.current;
+      if (!audio.currentSrc.endsWith(heroSong.audioSrc!)) {
+        audio.src = heroSong.audioSrc!;
+      }
+      if (audio.ended || audio.currentTime >= audio.duration) audio.currentTime = 0;
+      audio.play().catch(() => setPlaying(false));
+    } else {
+      setElapsed(0);
+    }
+  };
+
+  const duration = heroSong ? realDuration ?? heroSong.durationSeconds : SIMULATED_DURATION;
+  const progress = duration > 0 ? (elapsed / duration) * 100 : 0;
   const { hero } = campaign;
+  const playerTitle = heroSong?.title ?? hero.playerTitle;
+  const playerSubtitle = heroSong?.description ?? hero.playerSubtitle;
 
   return (
     <section
@@ -134,13 +189,15 @@ export function Hero({ campaign }: { campaign: Campaign }) {
           transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
           className="relative mx-auto w-full max-w-md lg:mx-0"
         >
+          {heroSong && <audio ref={audioRef} preload="none" className="hidden" />}
+
           <div className="animate-float rounded-[28px] p-[1px] shadow-2xl shadow-primary/20">
             <div className="glass rounded-[28px] p-6 sm:p-7">
               <div className="flex items-center gap-4">
                 <AlbumArt seed={0} palette={campaign.theme.albumPalette} className="h-20 w-20 shrink-0" />
                 <div className="min-w-0">
-                  <p className="truncate font-heading text-lg font-semibold">{hero.playerTitle}</p>
-                  <p className="text-sm text-muted">{hero.playerSubtitle}</p>
+                  <p className="truncate font-heading text-lg font-semibold">{playerTitle}</p>
+                  <p className="truncate text-sm text-muted">{playerSubtitle}</p>
                 </div>
               </div>
 
@@ -150,7 +207,7 @@ export function Hero({ campaign }: { campaign: Campaign }) {
 
               <div className="mt-3 flex items-center justify-between text-xs font-medium text-muted">
                 <span>{formatTime(elapsed)}</span>
-                <span>{formatTime(DURATION)}</span>
+                <span>{formatTime(duration)}</span>
               </div>
 
               <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-foreground/[0.08]">
@@ -171,7 +228,7 @@ export function Hero({ campaign }: { campaign: Campaign }) {
                 <button
                   type="button"
                   aria-label={playing ? "Pausar" : "Tocar"}
-                  onClick={() => setPlaying((v) => !v)}
+                  onClick={handleTogglePlay}
                   className="flex h-14 w-14 items-center justify-center rounded-full gradient-brand text-white shadow-lg shadow-primary/30 transition-transform hover:scale-105 active:scale-95"
                 >
                   {playing ? (
