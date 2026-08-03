@@ -144,35 +144,31 @@ export function FeaturedCollection({ campaign }: { campaign: Campaign }) {
 
   const activeSong = campaign.songs.find((s) => s.id === playingId);
 
-  // Real <audio> playback for songs that have an audioSrc.
+  // Attach listeners once to the single shared <audio> element.
   useEffect(() => {
-    if (!activeSong?.audioSrc) return;
+    const audio = audioRef.current;
+    if (!audio) return;
 
-    const audio = new Audio(activeSong.audioSrc);
-    audioRef.current = audio;
-
-    const onLoadedMetadata = () => {
-      setDurations((prev) => ({ ...prev, [activeSong.id]: audio.duration }));
-    };
     const onTimeUpdate = () => setElapsed(audio.currentTime);
     const onEnded = () => {
       setPlayingId(null);
       setElapsed(0);
     };
+    const onLoadedMetadata = () => {
+      const current = campaign.songs.find((s) => s.audioSrc && audio.currentSrc.endsWith(s.audioSrc));
+      if (!current) return;
+      setDurations((prev) => ({ ...prev, [current.id]: audio.duration }));
+    };
 
-    audio.addEventListener("loadedmetadata", onLoadedMetadata);
     audio.addEventListener("timeupdate", onTimeUpdate);
     audio.addEventListener("ended", onEnded);
-    audio.play().catch(() => setPlayingId(null));
-
+    audio.addEventListener("loadedmetadata", onLoadedMetadata);
     return () => {
-      audio.pause();
-      audio.removeEventListener("loadedmetadata", onLoadedMetadata);
       audio.removeEventListener("timeupdate", onTimeUpdate);
       audio.removeEventListener("ended", onEnded);
-      audioRef.current = null;
+      audio.removeEventListener("loadedmetadata", onLoadedMetadata);
     };
-  }, [activeSong]);
+  }, [campaign.songs]);
 
   // Simulated waveform fallback for songs without a real audio file.
   useEffect(() => {
@@ -201,18 +197,34 @@ export function FeaturedCollection({ campaign }: { campaign: Campaign }) {
 
   if (campaign.songs.length === 0) return null;
 
-  const handleToggle = (id: string) => {
-    if (playingId === id) {
+  const handleToggle = (song: CampaignSong) => {
+    const audio = audioRef.current;
+
+    if (playingId === song.id) {
+      if (song.audioSrc && audio) audio.pause();
       setPlayingId(null);
       setElapsed(0);
       return;
     }
+
     setElapsed(0);
-    setPlayingId(id);
+    setPlayingId(song.id);
+
+    // Real playback: call play() synchronously inside the click handler —
+    // Safari/iOS silently blocks play() calls made from an async effect.
+    if (song.audioSrc && audio) {
+      if (!audio.currentSrc.endsWith(song.audioSrc)) {
+        audio.src = song.audioSrc;
+      }
+      audio.currentTime = 0;
+      audio.play().catch(() => setPlayingId(null));
+    }
   };
 
   return (
     <section id="collection" className="py-24 sm:py-32">
+      <audio ref={audioRef} preload="none" className="hidden" />
+
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <ScrollReveal className="mx-auto max-w-2xl text-center">
           <CampaignBadge campaign={campaign} className="mb-4" />
@@ -240,7 +252,7 @@ export function FeaturedCollection({ campaign }: { campaign: Campaign }) {
               isPlaying={playingId === song.id}
               elapsed={playingId === song.id ? elapsed : 0}
               duration={durations[song.id] ?? song.durationSeconds}
-              onToggle={() => handleToggle(song.id)}
+              onToggle={() => handleToggle(song)}
             />
           ))}
           <ComingSoonCard campaign={campaign} index={campaign.songs.length} />
