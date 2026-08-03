@@ -22,7 +22,7 @@ export const fathersDayCampaign: Campaign = {
     ],
   },
   hero: {
-    eyebrow: "Uma homenagem sob medida para o seu herói",
+    eyebrow: "Uma homenagem perfeita para o seu herói",
     headline: "Dê ao Papai um Presente",
     headlineHighlight: "Que Ele Nunca Vai Esquecer",
     subheadline:
