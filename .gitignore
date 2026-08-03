@@ -36,8 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
-# raw uploaded originals (already copied into public/audio)
+# raw uploaded originals (already copied into public/audio or src/app/icon.png)
 /mscs
+/imgs
 
 # Claude Code internal state
 /.claude
