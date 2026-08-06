@@ -3,13 +3,13 @@ export const steps = [
     number: "01",
     title: "Conte Sua História",
     description:
-      "Conte sobre o momento, a memória ou a pessoa que você quer celebrar. Alguns detalhes já fazem toda a diferença.",
+      "Clique no botão e fale com nosso time pelo WhatsApp. Conte uma lembrança, um apelido, algo que só vocês dois entendem — atendimento 100% humano, sem formulário.",
   },
   {
     number: "02",
     title: "Escolha Seu Estilo Musical",
     description:
-      "Escolha o gênero e o clima que combinam — de baladas emotivas a hinos animados.",
+      "Escolha o gênero e o clima que combinam — de baladas emotivas a hinos animados — e confirme com um Pix seguro, direto na conversa.",
   },
   {
     number: "03",
@@ -21,7 +21,7 @@ export const steps = [
     number: "04",
     title: "Receba Sua Música",
     description:
-      "Receba sua música finalizada, com qualidade de estúdio, entregue digitalmente — pronta para compartilhar ou presentear.",
+      "Receba sua música finalizada, com qualidade de estúdio, direto no seu WhatsApp em até 1 hora — pronta para emocionar.",
   },
 ];
 
@@ -39,11 +39,12 @@ export const comparisonRows: {
   { label: "Processo de Compra Fácil", ours: true, others: false },
 ];
 
+// Only claims we fully control and can stand behind — no vanity counts we can't verify yet.
 export const statistics = [
-  { value: 75000, suffix: "+", label: "Músicas Criadas" },
-  { value: 14000, suffix: "+", label: "Avaliações Positivas" },
-  { value: 130, suffix: "M+", label: "Visualizações nas Redes" },
   { value: 1, suffix: "h", label: "Entrega Média" },
+  { value: 100, suffix: "%", label: "Atendimento Humano" },
+  { value: 7, suffix: "", label: "Dias de Suporte por Semana" },
+  { value: 1, suffix: "", label: "Revisão Grátis Incluída" },
 ];
 
 export const faqs = [
@@ -51,6 +52,16 @@ export const faqs = [
     question: "Quanto tempo leva para receber minha música?",
     answer:
       "A maioria das músicas é entregue em até 1 hora após a confirmação do pedido — direto no seu WhatsApp.",
+  },
+  {
+    question: "Como funciona o pagamento?",
+    answer:
+      "É simples: você fala com a nossa equipe pelo WhatsApp, combina os detalhes da música e paga via Pix, direto na conversa. Assim que o pagamento é confirmado, começamos a produção.",
+  },
+  {
+    question: "Vou falar com uma pessoa de verdade ou com um robô?",
+    answer:
+      "Com uma pessoa de verdade. Todo o atendimento — do primeiro \"oi\" até a entrega — é feito manualmente pela nossa equipe, sem robôs nem respostas automáticas.",
   },
   {
     question: "Posso pedir revisões?",
@@ -75,15 +86,30 @@ export const faqs = [
   {
     question: "E se eu não gostar da música?",
     answer:
-      "Oferecemos garantia de satisfação. Se a revisão gratuita não resolver suas preocupações, nossa equipe de suporte trabalhará com você em uma solução.",
+      "Você tem garantia de 7 dias. Peça sua revisão gratuita e, se ainda assim não ficar satisfeito, devolvemos seu dinheiro dentro desse prazo.",
   },
 ];
 
-export const pressMentions = [
-  "Crônica Diária",
-  "Vida Moderna",
-  "Semana em Tendência",
-  "Cultura Agora",
-  "Som & Estilo",
-  "A Gazeta",
+// Moments that justify the gift — helps different visitor motivations
+// self-identify without diluting the single Father's Day offer.
+export const fatherMoments = [
+  { title: "Dia dos Pais", description: "O presente perfeito pra celebrar o dia dele." },
+  { title: "Aniversário Dele", description: "Transforme mais um ano de vida numa trilha sonora." },
+  { title: "Ele Mora Longe", description: "Uma forma de estar perto, mesmo à distância." },
+  {
+    title: "Um \"Obrigado\" Que Faltou Dizer",
+    description: "Diga em música o que é difícil dizer de frente.",
+  },
+  { title: "Aposentadoria Dele", description: "Celebre uma vida inteira de trabalho e dedicação." },
+  { title: "Só Porque Sim", description: "Não precisa de data especial pra emocionar quem você ama." },
+];
+
+// Verifiable trust signals instead of unattributed "as seen in" press logos.
+export const trustBadges = [
+  "🔒 Pagamento seguro via Pix",
+  "👤 Atendimento 100% humano",
+  "⚡ Entrega em até 1 hora",
+  "🎵 Letra 100% personalizada",
+  "✅ Garantia de satisfação",
+  "💬 Resposta em minutos no WhatsApp",
 ];

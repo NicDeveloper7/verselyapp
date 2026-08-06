@@ -2,10 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Check, Pause, Play, SkipBack, SkipForward, Star } from "lucide-react";
+import { Check, Headphones, Lock, Pause, Play, Quote, SkipBack, SkipForward, UserCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AlbumArt } from "@/components/album-art";
 import { Waveform } from "@/components/waveform";
+import { TrustRow } from "@/components/trust-row";
+import { LiveActivity } from "@/components/live-activity";
 import { getWhatsAppLink } from "@/lib/whatsapp";
 import { ORIGINAL_PRICE, PRICE } from "@/lib/pricing";
 import type { Campaign } from "@/lib/campaigns/types";
@@ -13,8 +15,8 @@ import type { Campaign } from "@/lib/campaigns/types";
 const benefits = [
   "Música 100% Personalizada",
   "Produção Profissional",
-  "Entrega Rápida",
-  "Um Presente Verdadeiramente Marcante",
+  "Entrega Rápida (até 1h)",
+  "Atendimento 100% Humano",
 ];
 
 const SIMULATED_DURATION = 198; // 3:18, used only when no real song is available
@@ -139,9 +141,13 @@ export function Hero({ campaign }: { campaign: Campaign }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-foreground/[0.03] px-4 py-1.5 text-sm font-medium text-foreground/70">
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-border bg-foreground/[0.03] px-4 py-1.5 text-sm font-medium text-foreground/70">
             <span className="flex h-2 w-2 rounded-full bg-accent" />
             {hero.eyebrow}
+          </div>
+
+          <div className="mb-3">
+            <LiveActivity />
           </div>
 
           <h1 className="text-balance font-heading text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
@@ -150,6 +156,16 @@ export function Hero({ campaign }: { campaign: Campaign }) {
           </h1>
 
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">{hero.subheadline}</p>
+
+          <div className="mt-6 flex max-w-xl items-start gap-2.5 rounded-2xl border border-border bg-foreground/[0.03] px-4 py-3">
+            <Quote size={16} className="mt-0.5 shrink-0 text-primary/50" />
+            <p className="text-sm italic leading-relaxed text-foreground/80">
+              &ldquo;Meu pai chorou que nem criança quando ouviu a música.&rdquo;
+              <span className="mt-1 block text-xs font-semibold not-italic text-foreground/50">
+                — Camila D., cliente
+              </span>
+            </p>
+          </div>
 
           <ul className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
             {benefits.map((b) => (
@@ -180,6 +196,8 @@ export function Hero({ campaign }: { campaign: Campaign }) {
             A partir de <span className="line-through text-muted">{ORIGINAL_PRICE}</span>{" "}
             <span className="font-bold text-accent">{PRICE}</span> — oferta por tempo limitado
           </p>
+
+          <TrustRow className="mt-6" />
         </motion.div>
 
         {/* Right column: floating player mockup */}
@@ -190,6 +208,13 @@ export function Hero({ campaign }: { campaign: Campaign }) {
           className="relative mx-auto w-full max-w-md lg:mx-0"
         >
           {heroSong && <audio ref={audioRef} preload="none" className="hidden" />}
+
+          {heroSong && (
+            <p className="mb-3 flex items-center justify-center gap-1.5 text-center text-xs font-semibold text-foreground/60 lg:justify-start">
+              <Headphones size={13} className="text-primary" />
+              Exemplo real — assim pode soar a música do seu pai
+            </p>
+          )}
 
           <div className="animate-float rounded-[28px] p-[1px] shadow-2xl shadow-primary/20">
             <div className="glass rounded-[28px] p-6 sm:p-7">
@@ -255,14 +280,10 @@ export function Hero({ campaign }: { campaign: Campaign }) {
             transition={{ duration: 0.6, delay: 0.5 }}
             className="glass absolute -left-6 -top-6 hidden rounded-2xl px-4 py-3 shadow-xl sm:block"
           >
-            <div className="flex items-center gap-2">
-              <div className="flex text-accent">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} size={13} className="fill-current" />
-                ))}
-              </div>
+            <div className="flex items-center gap-2 text-primary">
+              <UserCheck size={18} />
             </div>
-            <p className="mt-1 text-sm font-bold">4,9/5 de Avaliação</p>
+            <p className="mt-1 text-sm font-bold">Atendimento 100% Humano</p>
           </motion.div>
 
           <motion.div
@@ -271,8 +292,10 @@ export function Hero({ campaign }: { campaign: Campaign }) {
             transition={{ duration: 0.6, delay: 0.65 }}
             className="glass absolute -bottom-6 -right-4 hidden rounded-2xl px-4 py-3 shadow-xl sm:block"
           >
-            <p className="font-heading text-lg font-bold gradient-text">75.000+</p>
-            <p className="text-xs text-muted">Músicas Criadas</p>
+            <div className="flex items-center gap-2 text-primary">
+              <Lock size={18} />
+            </div>
+            <p className="mt-1 text-sm font-bold">Pagamento Seguro via Pix</p>
           </motion.div>
 
           <motion.div

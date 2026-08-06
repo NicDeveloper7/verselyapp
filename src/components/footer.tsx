@@ -1,25 +1,27 @@
-import { Music2 } from "lucide-react";
+import { Lock, MessageCircle, Music2 } from "lucide-react";
+import { getWhatsAppLink, WHATSAPP_NUMBER } from "@/lib/whatsapp";
+import type { Campaign } from "@/lib/campaigns/types";
 
-const columns = [
-  {
-    title: "Empresa",
-    links: [
-      { label: "Sobre", href: "#" },
-      { label: "Como Funciona", href: "#how-it-works" },
-      { label: "Contato", href: "#" },
-    ],
-  },
-  {
-    title: "Legal",
-    links: [
-      { label: "Política de Privacidade", href: "#" },
-      { label: "Termos de Serviço", href: "#" },
-      { label: "Política de Reembolso", href: "#" },
-    ],
-  },
+const navColumn = [
+  { label: "Ver Exemplos", href: "#collection" },
+  { label: "Planos", href: "#pricing" },
+  { label: "Depoimentos", href: "#testimonials" },
+  { label: "FAQ", href: "#faq" },
 ];
 
-export function Footer() {
+const legalColumn = [
+  { label: "Política de Privacidade", href: "#" },
+  { label: "Termos de Serviço", href: "#" },
+  { label: "Política de Reembolso", href: "#" },
+];
+
+function formatWhatsAppNumber(number: string) {
+  // "55" + area code (2) + local number — formats as (AA) XXXXX-XXXX
+  const local = number.slice(2);
+  return `(${local.slice(0, 2)}) ${local.slice(2, 7)}-${local.slice(7)}`;
+}
+
+export function Footer({ campaign }: { campaign: Campaign }) {
   return (
     <footer className="border-t border-border py-14">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -35,26 +37,58 @@ export function Footer() {
               Músicas personalizadas, escritas e produzidas para as pessoas e
               momentos que mais importam.
             </p>
+            <p className="mt-4 flex items-center gap-1.5 text-xs font-medium text-foreground/60">
+              <Lock size={13} className="text-primary" />
+              Pagamento seguro via Pix
+            </p>
           </div>
 
           <div className="grid grid-cols-2 gap-8 sm:gap-16">
-            {columns.map((col) => (
-              <div key={col.title}>
-                <p className="text-sm font-semibold">{col.title}</p>
-                <ul className="mt-4 space-y-3">
-                  {col.links.map((link) => (
-                    <li key={link.label}>
-                      <a
-                        href={link.href}
-                        className="text-sm text-muted transition-colors hover:text-foreground"
-                      >
-                        {link.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+            <div>
+              <p className="text-sm font-semibold">Navegação</p>
+              <ul className="mt-4 space-y-3">
+                {navColumn.map((link) => (
+                  <li key={link.label}>
+                    <a
+                      href={link.href}
+                      className="text-sm text-muted transition-colors hover:text-foreground"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <p className="text-sm font-semibold">Legal</p>
+              <ul className="mt-4 space-y-3">
+                {legalColumn.map((link) => (
+                  <li key={link.label}>
+                    <a
+                      href={link.href}
+                      className="text-sm text-muted transition-colors hover:text-foreground"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div>
+            <p className="text-sm font-semibold">Fale Com a Gente</p>
+            <a
+              href={getWhatsAppLink(campaign.whatsappMessage)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 flex items-center gap-2 text-sm text-muted transition-colors hover:text-foreground"
+            >
+              <MessageCircle size={15} className="text-primary" />
+              {formatWhatsAppNumber(WHATSAPP_NUMBER)}
+            </a>
+            <p className="mt-2 text-xs text-muted">Atendimento humano, 7 dias por semana.</p>
           </div>
         </div>
 

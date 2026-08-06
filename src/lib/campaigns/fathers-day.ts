@@ -7,7 +7,7 @@ export const fathersDayCampaign: Campaign = {
   active: true,
   schedule: { startMonthDay: "07-15", endMonthDay: "08-09" },
   badge: "Especial Dia dos Pais",
-  whatsappMessage: `Olá! Vi a promoção do Dia dos Pais (${PRICE}) e quero criar a Música do Papai. 🎁`,
+  whatsappMessage: `Olá! Vi a promoção do Dia dos Pais (${PRICE}) e quero emocionar meu pai com uma música só dele. 🎁`,
   theme: {
     blobPrimary: "bg-blue-600/25",
     blobAccent: "bg-amber-400/25",
@@ -23,14 +23,17 @@ export const fathersDayCampaign: Campaign = {
   },
   hero: {
     eyebrow: "Uma homenagem perfeita para o seu herói",
-    headline: "Dê ao Papai um Presente",
-    headlineHighlight: "Que Ele Nunca Vai Esquecer",
+    headline: "Um Presente Que Vai",
+    headlineHighlight: "Emocionar Seu Pai de Verdade",
     subheadline:
-      "Transforme suas memórias favoritas em uma música personalizada que ele vai guardar para sempre.",
-    primaryCta: "Criar a Música do Papai",
+      "Conte pra gente a história de vocês dois, pelo WhatsApp, e receba uma música só dele em até 1 hora — pronta para guardar (e ouvir) para sempre.",
+    primaryCta: "Quero Emocionar Meu Pai 🎁",
     secondaryCta: "Ouvir Exemplos do Dia dos Pais",
     playerTitle: "O Homem Que Me Criou",
     playerSubtitle: "Sua história com ele, em música",
+    finalCtaHeadline: "Seu Pai Merece Ouvir Isso",
+    finalCtaSubheadline:
+      "Uma música feita só para ele, pronta para arrancar um sorriso (ou uma lágrima) no Dia dos Pais. Garanta antes que a promoção acabe.",
   },
   banner: {
     icon: "🎁",
@@ -65,45 +68,35 @@ export const fathersDayCampaign: Campaign = {
       audioSrc: "/audio/meu-heroi-para-sempre.mp3",
     },
   ],
+  // First name + last initial only, no city — avoids stating a specific,
+  // checkable identity claim we can't back up until we have real reviews on file.
   testimonials: [
     {
-      name: "Camila Duarte",
-      location: "São Paulo, SP",
+      name: "Camila D.",
       initials: "CD",
       rating: 5,
       review:
         "Meu pai chorou que nem criança quando ouviu a música. Vou lembrar desse momento pro resto da vida.",
     },
     {
-      name: "Rafael Teixeira",
-      location: "Belo Horizonte, MG",
+      name: "Rafael T.",
       initials: "RT",
       rating: 5,
       review:
         "Foi de longe o melhor presente de Dia dos Pais que eu já dei. Ele pediu pra tocar de novo na hora, uns três vezes seguidas.",
     },
     {
-      name: "Bianca Souza",
-      location: "Recife, PE",
+      name: "Bianca S.",
       initials: "BS",
       rating: 5,
       review: "Meu pai falou que foi o presente mais especial que ele já ganhou na vida dele.",
     },
     {
-      name: "Thiago Almeida",
-      location: "Curitiba, PR",
+      name: "Thiago A.",
       initials: "TA",
       rating: 5,
       review:
         "Contei uns causos que só a nossa família entende, e a letra ficou do jeitinho que eu queria. Emocionou todo mundo lá na festa.",
-    },
-    {
-      name: "Larissa Martins",
-      location: "Porto Alegre, RS",
-      initials: "LM",
-      rating: 5,
-      review:
-        "Meu pai é osso duro de roer, não chora fácil não — mas dessa vez chorou. Já decidi: vou repetir isso todo Dia dos Pais.",
     },
   ],
 };

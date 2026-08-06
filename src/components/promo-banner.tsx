@@ -17,7 +17,7 @@ export function PromoBanner({ campaign }: { campaign: Campaign }) {
         </span>
 
         {banner.countdownTarget && (
-          <CampaignCountdown target={banner.countdownTarget} className="hidden sm:flex" />
+          <CampaignCountdown compact target={banner.countdownTarget} className="text-white/90" />
         )}
 
         <a

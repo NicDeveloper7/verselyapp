@@ -13,7 +13,7 @@ import type { Campaign } from "@/lib/campaigns/types";
 const links = [
   { href: "#how-it-works", label: "Como Funciona" },
   { href: "#collection", label: "Músicas" },
-  { href: "#why-us", label: "Por Que Nós" },
+  { href: "#pricing", label: "Planos" },
   { href: "#testimonials", label: "Avaliações" },
   { href: "#faq", label: "FAQ" },
 ];

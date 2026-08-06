@@ -1,8 +1,10 @@
 import { Navbar } from "@/components/navbar";
 import { Hero } from "@/components/hero";
 import { SocialProof } from "@/components/social-proof";
+import { MomentsGrid } from "@/components/moments-grid";
 import { FeaturedCollection } from "@/components/featured-collection";
 import { HowItWorks } from "@/components/how-it-works";
+import { PricingPlans } from "@/components/pricing-plans";
 import { StudioStory } from "@/components/studio-story";
 import { WhyChooseUs } from "@/components/why-choose-us";
 import { Testimonials } from "@/components/testimonials";
@@ -22,8 +24,10 @@ export default function Home() {
       <main className="pb-16 md:pb-0">
         <Hero campaign={campaign} />
         <SocialProof />
+        <MomentsGrid />
         <FeaturedCollection campaign={campaign} />
         <HowItWorks />
+        <PricingPlans campaign={campaign} />
         <StudioStory />
         <WhyChooseUs />
         <Testimonials testimonials={campaign.testimonials} />
@@ -31,7 +35,7 @@ export default function Home() {
         <FAQ />
         <FinalCTA campaign={campaign} />
       </main>
-      <Footer />
+      <Footer campaign={campaign} />
       <StickyMobileCTA campaign={campaign} />
     </>
   );

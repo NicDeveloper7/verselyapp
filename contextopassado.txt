@@ -1,0 +1,163 @@
+CONTEXTO PARA O PRÓXIMO CHAT (Copilot ou qualquer IA continuando este projeto)
+=============================================================================
+Gerado em 2026-08-06 ao final de uma sessão longa com Claude Code.
+Projeto: pag-sazonal (repo GitHub: NicDeveloper7/verselyapp), Next.js 16 + Turbopack.
+
+O QUE É O PROJETO
+------------------
+Landing page (marca "Versely") que vende músicas personalizadas como presente
+de Dia dos Pais 2026. Tráfego vem de anúncios pagos. Antes desta sessão: ~220
+visitantes, quase zero conversão. O objetivo da sessão foi (1) uma auditoria
+de CRO completa na landing page e (2) construir um checkout de verdade do
+zero (antes disso só existia um botão que abria o WhatsApp).
+
+Campanha ativa é forçada (não é por data): `ACTIVE_CAMPAIGN_ID = "fathers-day"`
+em src/lib/campaigns/index.ts. Countdown da promoção aponta pra 2026-08-09.
+
+FATOS DE NEGÓCIO CONFIRMADOS PELO DONO (não inventar nada disso de novo)
+--------------------------------------------------------------------------
+- Atendimento é 100% humano via WhatsApp, sem bot. Pode afirmar isso na copy.
+- Garantia de 7 dias (dinheiro de volta) é real — já está no FAQ do site.
+- Os depoimentos e estatísticas ORIGINAIS do template (75.000+ músicas,
+  14.000+ avaliações, nomes completos com cidade nos depoimentos, "Compra
+  verificada") eram TODOS placeholder/fictícios — confirmado pelo dono. Foram
+  suavizados (primeiro nome + inicial, sem cidade, sem "verificado", números
+  trocados por métricas defensáveis tipo "100% atendimento humano", "1h
+  entrega média"). Trocar por dados reais assim que o dono tiver.
+- A cor de marca REAL e permanente da Versely é roxo/rosa/magenta
+  (--primary: #6c63ff, --secondary: #a855f7, --accent: #ec4899, em
+  src/app/globals.css, usada em `gradient-brand`/`gradient-text` no site
+  inteiro). O azul/dourado é só o tema decorativo SAZONAL da campanha de Dia
+  dos Pais (blobs do Hero, capas de álbum) — não é a marca em si. Eu (Claude)
+  errei uma vez achando que a marca era azul/dourado; não repetir esse erro.
+
+ARQUITETURA DO CHECKOUT (mudou de provedor 2x nesta sessão, fiquem com esta)
+------------------------------------------------------------------------------
+Provedor de pagamento atual: CAKTO (não é Mercado Pago, não é Supabase —
+essas duas integrações foram construídas e depois REMOVIDAS na mesma sessão).
+
+Fluxo:
+1. Cliente clica "Comprar Agora" em algum plano (src/components/pricing-plans.tsx)
+   -> vai pra /pedido?plan=<id>
+2. /pedido (src/app/pedido/order-form.tsx) é um wizard em etapas (plano ->
+   nome do pai -> gênero -> história -> contato -> revisão). Contato exige
+   WhatsApp OU e-mail (pelo menos um).
+3. Ao confirmar, POST /api/orders (src/app/api/orders/route.ts) salva o
+   pedido no banco local (status "pending") e devolve o link de checkout do
+   Cakto correspondente ao plano (vem de src/lib/plans.ts, campo checkoutUrl).
+4. Antes de redirecionar pro Cakto, o navegador salva o orderId no
+   localStorage ("pending_order_id") — importante porque o Cakto NÃO devolve
+   nenhum parâmetro de referência na volta.
+5. Cliente paga no checkout do Cakto (Pix ou cartão, gerenciado 100% por eles
+   — nunca vemos dado de cartão).
+6. Cakto manda webhook pra /api/cakto/webhook (src/app/api/cakto/webhook/route.ts)
+   quando o pagamento é aprovado. A Cakto NÃO tem campo de referência externa
+   (confirmado na doc deles: docs.cakto.com.br), então o pedido é casado por
+   e-mail ou telefone do comprador (normalizado, últimos 8 dígitos do
+   telefone) — ver src/lib/cakto.ts, função findMatchingOrder.
+7. Autenticação do webhook: como a Cakto não documenta claramente como
+   assina as notificações, uso um token MEU próprio, embutido como query
+   param na URL do webhook cadastrada no painel deles:
+   https://SEUDOMINIO.com/api/cakto/webhook?token=X
+   O valor de X fica em .env.local como CAKTO_WEBHOOK_TOKEN. Sem isso
+   configurado, o webhook sempre nega (401) — fail closed, proposital.
+8. Depois de aprovado, o cliente cai em /pedido/sucesso, que lê o
+   pending_order_id do localStorage, busca o pedido via GET /api/orders/[id],
+   monta uma mensagem com todos os detalhes (plano, contato, história, nome
+   do pai, gênero) e ABRE AUTOMATICAMENTE o WhatsApp do NEGÓCIO com essa
+   mensagem pré-preenchida (só falta o cliente confirmar o envio — não é
+   1 automação server-to-WhatsApp de verdade, isso exigiria WhatsApp
+   Business Cloud API oficial, que o dono não quis configurar).
+
+BANCO DE DADOS
+---------------
+SQLite local via better-sqlite3, arquivo em data/orders.db (gitignored).
+Escolhido no lugar de Supabase porque o dono achou Supabase over-engineering
+pro estágio atual do negócio ("n ta tao escalado"). Schema se auto-cria em
+src/lib/db.ts (create table if not exists — NÃO faz migração automática se
+o schema mudar num arquivo já existente; se alterar as colunas em db.ts,
+quem já tiver um data/orders.db antigo precisa recriar a tabela manualmente).
+
+** ALERTA CRÍTICO AINDA NÃO RESOLVIDO **
+O dono confirmou que o destino é a VERCEL. Vercel tem sistema de arquivos
+EFÊMERO — o arquivo data/orders.db NÃO sobrevive entre deploys/cold starts
+lá. Ele foi avisado explicitamente e escolheu continuar testando local por
+enquanto ("Deixa o SQLite por enquanto, vou testar só localmente primeiro"),
+adiando a decisão de trocar pra um banco que sobreviva na Vercel (ex: Turso
+— mesma API simples do SQLite, mas hospedado). ISSO PRECISA SER RESOLVIDO
+ANTES de publicar de verdade na Vercel recebendo pedidos reais, ou os
+pedidos e a confirmação de pagamento vão sumir silenciosamente.
+
+OS 3 PLANOS (src/lib/plans.ts) — já com links reais do Cakto configurados
+----------------------------------------------------------------------------
+- Essencial — R$ 27,90 (cliente paga isso; no Cakto o valor cadastrado é
+  R$26,91 porque a Cakto soma uma taxa em cima no checkout deles — confirmado
+  pelo dono que R$26,91 + taxa = R$27,90 no simulador real da Cakto)
+  link: https://pay.cakto.com.br/98b33k4_1025214
+- Emocionante — R$ 47,90
+  link: https://pay.cakto.com.br/ww4o7xn_1025532
+  (preço cadastrado dentro do Cakto ainda não confirmado pelo dono com a
+  mesma precisão do Essencial — dei duas estimativas, taxa fixa R$46,91 ou
+  taxa percentual R$46,20, ele precisa verificar no simulador deles)
+- Memória Viva — R$ 67,90
+  link: https://pay.cakto.com.br/featqsr_1025538
+  (mesma pendência de confirmação de preço líquido que o Emocionante:
+  estimativas R$66,91 fixo ou R$65,49 percentual)
+
+No Cakto, a estrutura real é: 1 PRODUTO ("Versely Musics") contendo 3
+OFERTAS (uma por plano) — não são 3 produtos separados como eu assumi de
+início. Corrigido depois de ver print do painel.
+
+PENDÊNCIAS ABERTAS (em ordem de bloqueio)
+--------------------------------------------
+1. Confirmar preço líquido cadastrado no Cakto pro Emocionante e Memória Viva
+   (ver estimativas acima).
+2. Decidir imagem do produto no Cakto — a paleta roxo/rosa que ele já usou
+   ESTÁ correta (bate com a marca real). Os problemas reais eram de
+   CONTEÚDO: a imagem mostrava "QR Code pra ouvir" e um cartão físico com
+   QR code, e "capa personalizada" como recurso — nada disso existe nos 3
+   planos reais do site nem foi confirmado como entregável de verdade.
+   Também dizia "entrega imediata" mas o site promete "até 1 hora". Precisa
+   confirmar se são recursos reais (e aí adicionar no site também) ou tirar
+   da imagem.
+3. Webhook do Cakto ainda não está configurado de fato — estava no meio do
+   preenchimento do formulário "Adicionar Webhook" no painel deles quando a
+   sessão foi interrompida pra gerar este arquivo. Faltava:
+   - Confirmar domínio real (ele perguntou se eu tinha o domínio dele — eu
+     NÃO tenho, ele nunca me passou. Perguntar de novo.)
+   - Preencher a URL do webhook com https://DOMINIO/api/cakto/webhook?token=X
+   - Selecionar os 3 produtos/ofertas
+   - Selecionar o evento "Compra Aprovada" (purchase_approved)
+   - Campo "Tipo de disparo" no formulário deles — não sei o que as opções
+     significam, pedi pra ele listar as opções do dropdown e não recebi
+     resposta ainda.
+   - Campo "Chave secreta do webhook" — a Cakto pré-gera um valor sozinha,
+     mas meu código NÃO usa esse campo (uso só o ?token= da URL, que eu
+     controlo). Disse pra ele deixar como está, não mexer.
+   - Criar .env.local na raiz com CAKTO_WEBHOOK_TOKEN=<o mesmo token da URL>
+4. Resolver o banco de dados antes de ir pra Vercel de verdade (ver alerta
+   crítico acima — Turso é a sugestão, ele ainda não decidiu).
+5. Nunca implementado nesta sessão: nenhum Meta Pixel / Google Analytics no
+   site — não dá pra medir taxa de conversão real ainda. Item pendente desde
+   o início da sessão, nunca resolvido.
+6. metadataBase em src/app/layout.tsx ainda aponta pra "https://example.com"
+   (placeholder) — trocar quando tiver o domínio real definido.
+
+ARQUIVOS-CHAVE PRA SE ORIENTAR RÁPIDO
+----------------------------------------
+- src/lib/plans.ts            -> os 3 planos, preços, links de checkout
+- src/lib/db.ts                -> schema SQLite + funções de pedido
+- src/lib/cakto.ts              -> matching de webhook por email/telefone + verificação de token
+- src/app/api/orders/route.ts   -> cria pedido, devolve link de checkout
+- src/app/api/orders/[id]/route.ts -> busca pedido por id (usado pela página de sucesso)
+- src/app/api/cakto/webhook/route.ts -> recebe confirmação de pagamento da Cakto
+- src/app/pedido/               -> formulário (order-form.tsx), sucesso, erro
+- src/components/pricing-plans.tsx -> seção de planos na landing page
+- .env.example                  -> documenta as env vars necessárias (CAKTO_WEBHOOK_TOKEN)
+- src/lib/campaigns/fathers-day.ts -> toda a copy da campanha atual
+
+Se este arquivo ficar desatualizado, o histórico completo e mais detalhado
+está na memória do Claude Code em
+C:\Users\Nika\.claude\projects\c--Users-Nika-Downloads-pag-sazonal\memory\
+(arquivo project_fathers_day_landing_cro.md) — mas isso só é visível pro
+Claude, não pro Copilot, por isso este arquivo existe.

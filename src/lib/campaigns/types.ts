@@ -14,7 +14,8 @@ export type CampaignSong = {
 
 export type CampaignTestimonial = {
   name: string;
-  location: string;
+  /** Omit when there's no verifiable city/state to show — avoids implying a specific, checkable claim. */
+  location?: string;
   initials: string;
   rating: number;
   review: string;
@@ -37,6 +38,9 @@ export type CampaignHero = {
   secondaryCta: string;
   playerTitle: string;
   playerSubtitle: string;
+  /** Headline/subheadline for the closing CTA section. Falls back to generic copy when omitted. */
+  finalCtaHeadline?: string;
+  finalCtaSubheadline?: string;
 };
 
 export type CampaignTheme = {

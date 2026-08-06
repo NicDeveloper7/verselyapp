@@ -32,9 +32,13 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
+
+# local orders database (real customer data — never commit)
+/data
 
 # raw uploaded originals (already copied into public/audio or src/app/icon.png)
 /mscs

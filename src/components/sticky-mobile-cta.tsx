@@ -26,6 +26,9 @@ export function StickyMobileCTA({ campaign }: { campaign: Campaign }) {
           transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
           className="fixed inset-x-0 bottom-0 z-40 border-t border-border p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] glass md:hidden"
         >
+          <p className="mb-1.5 text-center text-[11px] font-medium text-foreground/60">
+            🔒 Pix seguro · 👤 Atendimento humano no WhatsApp
+          </p>
           <Button href={getWhatsAppLink(campaign.whatsappMessage)} external className="w-full">
             {campaign.hero.primaryCta}
           </Button>

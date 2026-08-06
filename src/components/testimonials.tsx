@@ -30,10 +30,10 @@ export function Testimonials({ testimonials }: { testimonials: CampaignTestimoni
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <ScrollReveal className="mx-auto max-w-2xl text-center">
           <h2 className="text-balance font-heading text-3xl font-bold tracking-tight sm:text-4xl">
-            Amado por Milhares de Pessoas
+            Histórias Que Já Emocionaram Pais e Filhos
           </h2>
           <p className="mt-4 text-lg text-muted">
-            Reações reais de quem transformou sua história em uma música.
+            Relatos de quem já transformou sua história em uma música com a gente.
           </p>
         </ScrollReveal>
 
@@ -68,7 +68,7 @@ export function Testimonials({ testimonials }: { testimonials: CampaignTestimoni
                   </div>
                   <div>
                     <p className="font-semibold">{current.name}</p>
-                    <p className="text-sm text-muted">{current.location} · Compra verificada</p>
+                    {current.location && <p className="text-sm text-muted">{current.location}</p>}
                   </div>
                 </div>
               </motion.div>
