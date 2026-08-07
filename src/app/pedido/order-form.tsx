@@ -341,7 +341,11 @@ export function OrderForm({ campaign }: { campaign: Campaign }) {
 
           {screen === "review" && (
             <form onSubmit={handleSubmit}>
-              <h1 className="font-heading text-2xl font-bold">Confira seu pedido</h1>
+              <h1 className="font-heading text-2xl font-bold">Quase lá — falta só finalizar</h1>
+              <p className="mt-1 text-sm text-muted">
+                Sua história já está pronta. É só confirmar o pagamento pra gente começar a compor
+                a música do seu pai agora.
+              </p>
               <div className="mt-5 space-y-2 rounded-xl border border-border bg-background/50 p-4 text-sm">
                 <div className="flex justify-between font-heading text-base font-bold">
                   <span>Plano {plan.name}</span>
@@ -355,13 +359,19 @@ export function OrderForm({ campaign }: { campaign: Campaign }) {
                 </p>
               )}
 
-              <Button type="submit" size="lg" disabled={loading || !canSubmit} className="mt-6 w-full">
+              <Button
+                type="submit"
+                variant="pay"
+                size="lg"
+                disabled={loading || !canSubmit}
+                className="mt-6 w-full"
+              >
                 {loading ? (
                   "Processando..."
                 ) : (
                   <>
                     <Check size={18} />
-                    Ir para o Pagamento — {plan.price}
+                    Confirmar e Começar Agora — {plan.price}
                   </>
                 )}
               </Button>
