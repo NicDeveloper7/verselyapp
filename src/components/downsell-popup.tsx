@@ -32,14 +32,20 @@ export function DownsellPopup() {
 
     const timer = setTimeout(trigger, TIME_TRIGGER_MS);
 
+    // Touch browsers sometimes synthesize mouseout events on scroll/tap,
+    // which was firing this "exit intent" on mobile too. Only real
+    // mouse-driven devices (hover + fine pointer) get this listener.
+    const hasMouse = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
     function onMouseOut(e: MouseEvent) {
       if (e.clientY <= 0) trigger();
     }
-    document.addEventListener("mouseout", onMouseOut);
+    if (hasMouse) {
+      document.addEventListener("mouseout", onMouseOut);
+    }
 
     return () => {
       clearTimeout(timer);
-      document.removeEventListener("mouseout", onMouseOut);
+      if (hasMouse) document.removeEventListener("mouseout", onMouseOut);
     };
   }, []);
 
