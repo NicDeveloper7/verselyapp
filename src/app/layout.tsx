@@ -20,12 +20,12 @@ const poppins = Poppins({
 export function generateMetadata(): Metadata {
   const campaign = getActiveCampaign();
   const title = `Versely — ${campaign.hero.headline} ${campaign.hero.headlineHighlight}`;
-  const description = campaign.hero.subheadline;
+  const description = campaign.hero.shareDescription ?? campaign.hero.subheadline;
 
   return {
     title,
     description,
-    metadataBase: new URL("https://example.com"),
+    metadataBase: new URL("https://verselyapp.vercel.app"),
     openGraph: { title, description, type: "website" },
   };
 }

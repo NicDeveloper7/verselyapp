@@ -34,6 +34,8 @@ export const fathersDayCampaign: Campaign = {
     finalCtaHeadline: "Seu Pai Merece Ouvir Isso",
     finalCtaSubheadline:
       "Uma música feita só para ele, pronta para arrancar um sorriso (ou uma lágrima) no Dia dos Pais. Garanta antes que a promoção acabe.",
+    shareDescription:
+      "Transforme a história com seu pai numa música só dele — em poucos cliques, pronta em até 1 hora. 🎁",
   },
   banner: {
     icon: "🎁",

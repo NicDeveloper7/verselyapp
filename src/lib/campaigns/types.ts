@@ -43,6 +43,14 @@ export type CampaignHero = {
   /** Headline/subheadline for the closing CTA section. Falls back to generic copy when omitted. */
   finalCtaHeadline?: string;
   finalCtaSubheadline?: string;
+  /**
+   * Description shown in link previews (WhatsApp/social share cards) when
+   * this page's URL is shared. Falls back to `subheadline` when omitted —
+   * set this separately when the on-page subheadline references something
+   * (e.g. "pelo WhatsApp") that doesn't read well as a standalone preview
+   * blurb out of context.
+   */
+  shareDescription?: string;
 };
 
 export type CampaignTheme = {
