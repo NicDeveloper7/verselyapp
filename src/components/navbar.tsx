@@ -10,10 +10,10 @@ import { CampaignBadge } from "@/components/campaign-badge";
 import type { Campaign } from "@/lib/campaigns/types";
 
 const links = [
+  { href: "#testimonials", label: "Avaliações" },
   { href: "#how-it-works", label: "Como Funciona" },
   { href: "#collection", label: "Músicas" },
   { href: "#pricing", label: "Planos" },
-  { href: "#testimonials", label: "Avaliações" },
   { href: "#faq", label: "FAQ" },
 ];
 

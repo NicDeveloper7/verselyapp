@@ -25,13 +25,13 @@ export default function Home() {
       <main className="pb-16 md:pb-0">
         <Hero campaign={campaign} />
         <SocialProof />
+        <Testimonials testimonials={campaign.testimonials} />
         <MomentsGrid />
         <FeaturedCollection campaign={campaign} />
         <HowItWorks />
         <PricingPlans campaign={campaign} />
         <StudioStory />
         <WhyChooseUs />
-        <Testimonials testimonials={campaign.testimonials} />
         <Statistics />
         <FAQ />
         <FinalCTA campaign={campaign} />
