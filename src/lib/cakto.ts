@@ -17,6 +17,34 @@ function normalizePhoneSuffix(phone: string | null | undefined) {
   return digits.length >= 8 ? digits.slice(-8) : null;
 }
 
+function normalizePhoneForCakto(phone: string) {
+  const digits = phone.replace(/\D/g, "");
+  // Cakto's prefill expects the country code first — assume Brazilian
+  // numbers typed without it (10-11 digits: area code + number).
+  return digits.startsWith("55") ? digits : `55${digits}`;
+}
+
+/**
+ * Cakto's checkout accepts ?name=&email=&phone= to prefill the buyer's
+ * details — using it means what the customer typed on our form is what
+ * ends up on the Cakto side too, instead of relying on them retyping it
+ * identically for findMatchingOrder to work.
+ */
+export function buildCaktoCheckoutUrl(
+  baseUrl: string,
+  info: { name: string; email?: string | null; whatsapp?: string | null }
+) {
+  const params = new URLSearchParams({ name: info.name });
+  if (info.email) {
+    params.set("email", info.email);
+    params.set("confirmEmail", info.email);
+  }
+  if (info.whatsapp) {
+    params.set("phone", normalizePhoneForCakto(info.whatsapp));
+  }
+  return `${baseUrl}?${params.toString()}`;
+}
+
 export function findMatchingOrder(
   pendingOrders: Order[],
   contact: { email?: string | null; phone?: string | null }

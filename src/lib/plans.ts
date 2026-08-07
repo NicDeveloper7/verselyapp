@@ -23,6 +23,8 @@ export const plans: Plan[] = [
     price: "R$ 27,90",
     priceCents: 2790,
     originalPrice: "R$ 59,90",
+    tagline: "Oferta Especial",
+    highlighted: true,
     features: [
       "Letra 100% personalizada com a história do seu pai",
       "Produção profissional (voz, instrumentos e mixagem)",
@@ -36,8 +38,6 @@ export const plans: Plan[] = [
     name: "Emocionante",
     price: "R$ 47,90",
     priceCents: 4790,
-    tagline: "Mais escolhido",
-    highlighted: true,
     features: [
       "Tudo do Essencial, mais:",
       "Letra impressa em PDF artesanal, pronta pra imprimir ou enviar",

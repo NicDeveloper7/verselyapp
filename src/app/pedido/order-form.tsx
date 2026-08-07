@@ -8,17 +8,40 @@ import { Button } from "@/components/ui/button";
 import { TrustRow } from "@/components/trust-row";
 import { getWhatsAppLink } from "@/lib/whatsapp";
 import { plans } from "@/lib/plans";
+import { downsellOffer, DOWNSELL_OFFER_ID } from "@/lib/downsell";
 import type { Campaign } from "@/lib/campaigns/types";
 
-const genres = ["Pop", "Sertanejo", "MPB", "Rock", "Gospel", "Jazz", "Rap", "R&B", "Soul"];
+const genres = [
+  "Pop",
+  "Sertanejo",
+  "MPB",
+  "Rock",
+  "Gospel",
+  "Jazz",
+  "Rap",
+  "R&B",
+  "Soul",
+  "Forró",
+  "Pagode",
+  "Funk",
+  "Reggae",
+  "Bolero",
+  "Axé",
+  "Acústico / Piano",
+];
 
-type Screen = "plan" | "father" | "genre" | "story" | "contact" | "review";
+const moods = ["Nostálgico", "Alegre", "Emocionante", "Calmo", "Épico", "Animado"];
 
-const SCREEN_ORDER: Screen[] = ["plan", "father", "genre", "story", "contact", "review"];
+const vocalTypes = ["Voz masculina", "Voz feminina", "Dueto", "Instrumental (sem voz)"];
+
+type Screen = "plan" | "father" | "genre" | "voice" | "story" | "contact" | "review";
+
+const SCREEN_ORDER: Screen[] = ["plan", "father", "genre", "voice", "story", "contact", "review"];
 
 export function OrderForm({ campaign }: { campaign: Campaign }) {
   const searchParams = useSearchParams();
   const planFromUrl = searchParams.get("plan");
+  const isSpecialOffer = searchParams.get("offer") === DOWNSELL_OFFER_ID;
 
   const [screen, setScreen] = useState<Screen>("plan");
   const [history, setHistory] = useState<Screen[]>([]);
@@ -26,9 +49,16 @@ export function OrderForm({ campaign }: { campaign: Campaign }) {
   const [planId, setPlanId] = useState(
     plans.find((p) => p.id === planFromUrl)?.id ?? plans[0].id
   );
+  // The discount popup's offer isn't a listed plan — arriving via
+  // ?offer=downsell selects it without it ever showing in the plan
+  // picker (picking a real plan there clears this back to false).
+  const [usingSpecialOffer, setUsingSpecialOffer] = useState(isSpecialOffer);
   const [fatherName, setFatherName] = useState("");
   const [genre, setGenre] = useState("");
+  const [mood, setMood] = useState("");
+  const [vocalType, setVocalType] = useState("");
   const [story, setStory] = useState("");
+  const [referenceTrack, setReferenceTrack] = useState("");
   const [customerName, setCustomerName] = useState("");
   const [customerWhatsapp, setCustomerWhatsapp] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
@@ -36,7 +66,7 @@ export function OrderForm({ campaign }: { campaign: Campaign }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const plan = plans.find((p) => p.id === planId) ?? plans[0];
+  const plan = usingSpecialOffer ? downsellOffer : (plans.find((p) => p.id === planId) ?? plans[0]);
 
   function goTo(next: Screen) {
     setHistory((h) => [...h, screen]);
@@ -71,7 +101,10 @@ export function OrderForm({ campaign }: { campaign: Campaign }) {
           customerWhatsapp,
           customerEmail,
           genre,
+          mood,
+          vocalType,
           story,
+          referenceTrack,
         }),
       });
 
@@ -119,14 +152,29 @@ export function OrderForm({ campaign }: { campaign: Campaign }) {
             <div>
               <h1 className="font-heading text-2xl font-bold">Escolha o plano</h1>
               <p className="mt-1 text-sm text-muted">Você pode trocar a qualquer momento.</p>
+
+              {usingSpecialOffer && (
+                <div className="mt-4 rounded-xl border border-primary/40 bg-primary/5 px-4 py-3">
+                  <p className="text-sm font-semibold">
+                    {downsellOffer.name} selecionada — <span className="gradient-text">{downsellOffer.price}</span>
+                  </p>
+                  <p className="mt-0.5 text-xs text-muted">Escolha um plano abaixo se preferir trocar.</p>
+                </div>
+              )}
+
               <div className="mt-6 space-y-3">
                 {plans.map((p) => (
                   <button
                     key={p.id}
                     type="button"
-                    onClick={() => setPlanId(p.id)}
+                    onClick={() => {
+                      setPlanId(p.id);
+                      setUsingSpecialOffer(false);
+                    }}
                     className={`flex w-full items-center justify-between rounded-xl border px-4 py-3.5 text-left transition-colors ${
-                      p.id === planId ? "border-primary bg-primary/5" : "border-border hover:bg-foreground/[0.03]"
+                      p.id === planId && !usingSpecialOffer
+                        ? "border-primary bg-primary/5"
+                        : "border-border hover:bg-foreground/[0.03]"
                     }`}
                   >
                     <span>
@@ -178,6 +226,49 @@ export function OrderForm({ campaign }: { campaign: Campaign }) {
                   </button>
                 ))}
               </div>
+
+              <p className="mt-7 text-sm font-medium">Qual clima ela deve ter? (Opcional)</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {moods.map((m) => (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => setMood(mood === m ? "" : m)}
+                    className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                      mood === m
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border hover:bg-foreground/[0.04]"
+                    }`}
+                  >
+                    {m}
+                  </button>
+                ))}
+              </div>
+
+              <Nav onBack={goBack} onNext={() => goTo("voice")} />
+            </div>
+          )}
+
+          {screen === "voice" && (
+            <div>
+              <h1 className="font-heading text-2xl font-bold">Que tipo de voz?</h1>
+              <p className="mt-1 text-sm text-muted">Se não souber, a gente escolhe a que combina melhor. (Opcional)</p>
+              <div className="mt-6 flex flex-wrap gap-2">
+                {vocalTypes.map((v) => (
+                  <button
+                    key={v}
+                    type="button"
+                    onClick={() => setVocalType(vocalType === v ? "" : v)}
+                    className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                      vocalType === v
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border hover:bg-foreground/[0.04]"
+                    }`}
+                  >
+                    {v}
+                  </button>
+                ))}
+              </div>
               <Nav onBack={goBack} onNext={() => goTo("story")} />
             </div>
           )}
@@ -195,6 +286,17 @@ export function OrderForm({ campaign }: { campaign: Campaign }) {
                 className="mt-6 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-primary/40"
                 placeholder="Comece a escrever..."
               />
+
+              <label className="mt-5 block">
+                <span className="text-sm font-medium">Alguma música ou artista de referência? (Opcional)</span>
+                <input
+                  value={referenceTrack}
+                  onChange={(e) => setReferenceTrack(e.target.value)}
+                  className="mt-1.5 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  placeholder="Ex: algo no estilo de Legião Urbana"
+                />
+              </label>
+
               <Nav onBack={goBack} onNext={() => goTo("contact")} disabled={!story.trim()} />
             </div>
           )}

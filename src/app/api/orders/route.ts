@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { insertOrder } from "@/lib/db";
 import { plans } from "@/lib/plans";
+import { downsellOffer, DOWNSELL_OFFER_ID } from "@/lib/downsell";
+import { buildCaktoCheckoutUrl } from "@/lib/cakto";
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
@@ -8,10 +10,25 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Corpo da requisição inválido." }, { status: 400 });
   }
 
-  const { planId, customerName, customerWhatsapp, customerEmail, fatherName, story, genre } =
-    body as Record<string, unknown>;
+  const {
+    planId,
+    customerName,
+    customerWhatsapp,
+    customerEmail,
+    fatherName,
+    story,
+    genre,
+    mood,
+    vocalType,
+    referenceTrack,
+  } = body as Record<string, unknown>;
 
-  const plan = plans.find((p) => p.id === planId);
+  const asText = (v: unknown) => (typeof v === "string" && v.trim() ? v.trim() : null);
+
+  // The discount popup's offer isn't a listed plan, so it's resolved
+  // separately rather than living in the plans array shown on the pricing
+  // section.
+  const plan = planId === DOWNSELL_OFFER_ID ? downsellOffer : plans.find((p) => p.id === planId);
   if (!plan) {
     return NextResponse.json({ error: "Plano inválido." }, { status: 400 });
   }
@@ -40,16 +57,19 @@ export async function POST(request: Request) {
 
   let order;
   try {
-    order = insertOrder({
+    order = await insertOrder({
       planId: plan.id,
       planName: plan.name,
       priceCents: plan.priceCents,
       customerName: customerName.trim(),
       customerWhatsapp: whatsapp || null,
       customerEmail: email || null,
-      fatherName: typeof fatherName === "string" && fatherName.trim() ? fatherName.trim() : null,
+      fatherName: asText(fatherName),
       story: story.trim(),
-      genre: typeof genre === "string" && genre.trim() ? genre.trim() : null,
+      genre: asText(genre),
+      mood: asText(mood),
+      vocalType: asText(vocalType),
+      referenceTrack: asText(referenceTrack),
     });
   } catch (err) {
     console.error("Failed to insert order", err);
@@ -59,5 +79,11 @@ export async function POST(request: Request) {
     );
   }
 
-  return NextResponse.json({ orderId: order.id, checkoutUrl: plan.checkoutUrl });
+  const checkoutUrl = buildCaktoCheckoutUrl(plan.checkoutUrl, {
+    name: customerName.trim(),
+    email: email || null,
+    whatsapp: whatsapp || null,
+  });
+
+  return NextResponse.json({ orderId: order.id, checkoutUrl });
 }

@@ -1,10 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CheckCircle2, Clock } from "lucide-react";
 import { getWhatsAppLink } from "@/lib/whatsapp";
 import type { Order } from "@/lib/db";
-import { AutoWhatsApp } from "./auto-whatsapp";
+import { AutoWhatsApp } from "@/components/auto-whatsapp";
+import { ProductionCountdown } from "./production-countdown";
+
+const POLL_MS = 5000;
 
 function formatCents(cents: number) {
   return (cents / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -22,6 +25,9 @@ function buildWhatsAppMessage(order: Order) {
     order.customer_email ? `E-mail: ${order.customer_email}` : null,
     order.father_name ? `Nome do pai: ${order.father_name}` : null,
     order.genre ? `Estilo: ${order.genre}` : null,
+    order.mood ? `Clima: ${order.mood}` : null,
+    order.vocal_type ? `Voz: ${order.vocal_type}` : null,
+    order.reference_track ? `Referência: ${order.reference_track}` : null,
     "",
     "História:",
     order.story,
@@ -33,6 +39,9 @@ function buildWhatsAppMessage(order: Order) {
 export function SuccessContent({ fallbackMessage }: { fallbackMessage: string }) {
   const [status, setStatus] = useState<"loading" | "found" | "not-found">("loading");
   const [order, setOrder] = useState<Order | null>(null);
+  const orderIdRef = useRef<string | null>(null);
+  const orderRef = useRef<Order | null>(null);
+  orderRef.current = order;
 
   useEffect(() => {
     const id = window.localStorage.getItem("pending_order_id");
@@ -40,19 +49,34 @@ export function SuccessContent({ fallbackMessage }: { fallbackMessage: string })
       setStatus("not-found");
       return;
     }
+    orderIdRef.current = id;
 
-    fetch(`/api/orders/${id}`)
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (data?.order) {
-          setOrder(data.order);
-          setStatus("found");
-          window.localStorage.removeItem("pending_order_id");
-        } else {
-          setStatus("not-found");
-        }
-      })
-      .catch(() => setStatus("not-found"));
+    function fetchOrder() {
+      fetch(`/api/orders/${orderIdRef.current}`)
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data?.order) {
+            setOrder(data.order);
+            setStatus("found");
+          } else {
+            setStatus("not-found");
+          }
+        })
+        .catch(() => setStatus((prev) => (prev === "loading" ? "not-found" : prev)));
+    }
+
+    fetchOrder();
+    // Keep checking while payment hasn't been confirmed yet — the Cakto
+    // webhook can land a few seconds after the redirect back to this page.
+    const poll = setInterval(() => {
+      if (orderRef.current?.status && orderRef.current.status !== "pending") {
+        clearInterval(poll);
+        return;
+      }
+      fetchOrder();
+    }, POLL_MS);
+
+    return () => clearInterval(poll);
   }, []);
 
   const approved = order?.status === "approved";
@@ -76,7 +100,7 @@ export function SuccessContent({ fallbackMessage }: { fallbackMessage: string })
       <p className="mt-4 text-lg leading-relaxed text-muted">
         {approved
           ? "Recebemos seu pedido e o pagamento já foi aprovado. Vamos abrir o WhatsApp com todos os detalhes — é só confirmar o envio."
-          : "Já recebemos seu pedido. A confirmação do pagamento pode levar alguns instantes — enquanto isso, já vamos abrir o WhatsApp com os detalhes."}
+          : "Já recebemos seu pedido. A confirmação do pagamento pode levar alguns instantes — esta página atualiza sozinha assim que sair de \"pendente\"."}
       </p>
 
       {order && (
@@ -90,6 +114,8 @@ export function SuccessContent({ fallbackMessage }: { fallbackMessage: string })
           <AutoWhatsApp link={whatsappLink} />
         </div>
       )}
+
+      {approved && order?.approved_at && <ProductionCountdown approvedAt={order.approved_at} />}
     </>
   );
 }

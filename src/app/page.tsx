@@ -13,6 +13,7 @@ import { FAQ } from "@/components/faq";
 import { FinalCTA } from "@/components/final-cta";
 import { Footer } from "@/components/footer";
 import { StickyMobileCTA } from "@/components/sticky-mobile-cta";
+import { DownsellPopup } from "@/components/downsell-popup";
 import { getActiveCampaign } from "@/lib/campaigns";
 
 export default function Home() {
@@ -37,6 +38,7 @@ export default function Home() {
       </main>
       <Footer campaign={campaign} />
       <StickyMobileCTA campaign={campaign} />
+      <DownsellPopup />
     </>
   );
 }

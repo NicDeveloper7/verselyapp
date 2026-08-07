@@ -3,7 +3,6 @@ import { ScrollReveal } from "@/components/scroll-reveal";
 import { Button } from "@/components/ui/button";
 import { PricingPromo } from "@/components/pricing-promo";
 import { TrustRow } from "@/components/trust-row";
-import { getWhatsAppLink } from "@/lib/whatsapp";
 import type { Campaign } from "@/lib/campaigns/types";
 
 export function FinalCTA({ campaign }: { campaign: Campaign }) {
@@ -32,7 +31,7 @@ export function FinalCTA({ campaign }: { campaign: Campaign }) {
           </div>
 
           <div className="mt-8 flex justify-center">
-            <Button href={getWhatsAppLink(campaign.whatsappMessage)} external size="lg">
+            <Button href="/pedido?plan=essencial" size="lg">
               {campaign.hero.primaryCta}
               <ArrowRight size={18} />
             </Button>

@@ -67,36 +67,57 @@ export const fathersDayCampaign: Campaign = {
       badge: "Presente Mais Popular",
       audioSrc: "/audio/meu-heroi-para-sempre.mp3",
     },
+    {
+      id: "fd3",
+      title: "Meu Herói Tem Seu Nome",
+      genre: "Balada Emotiva",
+      duration: "4:05",
+      durationSeconds: 245,
+      description: "Uma homenagem que carrega o nome dele em cada verso.",
+      audioSrc: "/audio/meu-heroi-tem-seu-nome.mp3",
+    },
+    {
+      id: "fd4",
+      title: "Meu Herói, Reginaldo",
+      genre: "Sertanejo Raiz",
+      duration: "3:46",
+      durationSeconds: 226,
+      description: "A história de um pai chamado Reginaldo, contada em música.",
+      audioSrc: "/audio/meu-heroi-reginaldo.mp3",
+    },
+    {
+      id: "fd5",
+      title: "Obrigado por Tudo, Pai",
+      genre: "MPB Acústico",
+      duration: "4:53",
+      durationSeconds: 293,
+      description: "Um agradecimento sincero para o pai que fez tudo por ele.",
+      audioSrc: "/audio/obrigado-por-tudo-pai.mp3",
+    },
   ],
-  // First name + last initial only, no city — avoids stating a specific,
-  // checkable identity claim we can't back up until we have real reviews on file.
+  // Real customer reactions, screenshotted from actual WhatsApp
+  // conversations — first names only, as shown in the chat itself.
   testimonials: [
     {
-      name: "Camila D.",
-      initials: "CD",
+      name: "Isadora",
+      initials: "IS",
       rating: 5,
-      review:
-        "Meu pai chorou que nem criança quando ouviu a música. Vou lembrar desse momento pro resto da vida.",
+      review: "Caiu um cisco aqui, muito obrigada 🥹",
+      screenshot: { src: "/reviews/isadora.png", width: 828, height: 1022 },
     },
     {
-      name: "Rafael T.",
-      initials: "RT",
+      name: "Assis",
+      initials: "AS",
       rating: 5,
-      review:
-        "Foi de longe o melhor presente de Dia dos Pais que eu já dei. Ele pediu pra tocar de novo na hora, uns três vezes seguidas.",
+      review: "Perfeito, com lágrimas aqui. Agradeço muito, obrigado.",
+      screenshot: { src: "/reviews/assis.png", width: 827, height: 411 },
     },
     {
-      name: "Bianca S.",
-      initials: "BS",
+      name: "Agatha",
+      initials: "AG",
       rating: 5,
-      review: "Meu pai falou que foi o presente mais especial que ele já ganhou na vida dele.",
-    },
-    {
-      name: "Thiago A.",
-      initials: "TA",
-      rating: 5,
-      review:
-        "Contei uns causos que só a nossa família entende, e a letra ficou do jeitinho que eu queria. Emocionou todo mundo lá na festa.",
+      review: "Já chorei... ele é tudo pra mim, e essa música fala tudo.",
+      screenshot: { src: "/reviews/agatha.png", width: 828, height: 1703 },
     },
   ],
 };

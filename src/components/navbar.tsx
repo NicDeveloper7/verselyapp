@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { PromoBanner } from "@/components/promo-banner";
 import { CampaignBadge } from "@/components/campaign-badge";
-import { getWhatsAppLink } from "@/lib/whatsapp";
 import type { Campaign } from "@/lib/campaigns/types";
 
 const links = [
@@ -64,7 +63,7 @@ export function Navbar({ campaign }: { campaign: Campaign }) {
 
             <div className="hidden items-center gap-3 md:flex">
               <ThemeToggle />
-              <Button href={getWhatsAppLink(campaign.whatsappMessage)} external size="md">
+              <Button href="/pedido?plan=essencial" size="md">
                 {campaign.hero.primaryCta}
               </Button>
             </div>
@@ -102,7 +101,7 @@ export function Navbar({ campaign }: { campaign: Campaign }) {
                       {link.label}
                     </a>
                   ))}
-                  <Button href={getWhatsAppLink(campaign.whatsappMessage)} external className="mt-2 w-full">
+                  <Button href="/pedido?plan=essencial" className="mt-2 w-full">
                     {campaign.hero.primaryCta}
                   </Button>
                 </div>

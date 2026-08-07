@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { getWhatsAppLink } from "@/lib/whatsapp";
 import type { Campaign } from "@/lib/campaigns/types";
 
 export function StickyMobileCTA({ campaign }: { campaign: Campaign }) {
@@ -29,7 +28,7 @@ export function StickyMobileCTA({ campaign }: { campaign: Campaign }) {
           <p className="mb-1.5 text-center text-[11px] font-medium text-foreground/60">
             🔒 Pix seguro · 👤 Atendimento humano no WhatsApp
           </p>
-          <Button href={getWhatsAppLink(campaign.whatsappMessage)} external className="w-full">
+          <Button href="/pedido?plan=essencial" className="w-full">
             {campaign.hero.primaryCta}
           </Button>
         </motion.div>

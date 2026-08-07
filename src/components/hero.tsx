@@ -2,13 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Check, Headphones, Lock, Pause, Play, Quote, SkipBack, SkipForward, UserCheck } from "lucide-react";
+import { Check, Headphones, Lock, Pause, Play, Quote, SkipBack, SkipForward } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AlbumArt } from "@/components/album-art";
 import { Waveform } from "@/components/waveform";
 import { TrustRow } from "@/components/trust-row";
 import { LiveActivity } from "@/components/live-activity";
-import { getWhatsAppLink } from "@/lib/whatsapp";
 import { ORIGINAL_PRICE, PRICE } from "@/lib/pricing";
 import type { Campaign } from "@/lib/campaigns/types";
 
@@ -179,7 +178,7 @@ export function Hero({ campaign }: { campaign: Campaign }) {
           </ul>
 
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-            <Button href={getWhatsAppLink(campaign.whatsappMessage)} external size="lg">
+            <Button href="/pedido?plan=essencial" size="lg">
               {hero.primaryCta}
             </Button>
             <Button
@@ -216,96 +215,80 @@ export function Hero({ campaign }: { campaign: Campaign }) {
             </p>
           )}
 
-          <div className="animate-float rounded-[28px] p-[1px] shadow-2xl shadow-primary/20">
-            <div className="glass rounded-[28px] p-6 sm:p-7">
-              <div className="flex items-center gap-4">
-                <AlbumArt seed={0} palette={campaign.theme.albumPalette} className="h-20 w-20 shrink-0" />
-                <div className="min-w-0">
-                  <p className="truncate font-heading text-lg font-semibold">{playerTitle}</p>
-                  <p className="truncate text-sm text-muted">{playerSubtitle}</p>
+          {/* Relative wrapper scoped to just the card, so the floating
+              badges anchor to its corners regardless of what renders
+              above (e.g. the "Exemplo real" line) or below it. */}
+          <div className="relative">
+            <div className="animate-float rounded-[28px] p-[1px] shadow-2xl shadow-primary/20">
+              <div className="glass rounded-[28px] p-6 sm:p-7">
+                <div className="flex items-center gap-4">
+                  <AlbumArt seed={0} palette={campaign.theme.albumPalette} className="h-20 w-20 shrink-0" />
+                  <div className="min-w-0">
+                    <p className="truncate font-heading text-lg font-semibold">{playerTitle}</p>
+                    <p className="truncate text-sm text-muted">{playerSubtitle}</p>
+                  </div>
+                </div>
+
+                <div className="relative mt-6 h-16 overflow-hidden rounded-2xl bg-foreground/90 px-4 py-3 dark:bg-white/10">
+                  <Waveform playing={playing} progress={progress} />
+                </div>
+
+                <div className="mt-3 flex items-center justify-between text-xs font-medium text-muted">
+                  <span>{formatTime(elapsed)}</span>
+                  <span>{formatTime(duration)}</span>
+                </div>
+
+                <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-foreground/[0.08]">
+                  <div
+                    className="h-full rounded-full gradient-brand transition-[width] duration-100"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+
+                <div className="mt-5 flex items-center justify-center gap-6">
+                  <button
+                    type="button"
+                    aria-label="Anterior"
+                    className="text-foreground/50 transition-colors hover:text-foreground"
+                  >
+                    <SkipBack size={20} />
+                  </button>
+                  <button
+                    type="button"
+                    aria-label={playing ? "Pausar" : "Tocar"}
+                    onClick={handleTogglePlay}
+                    className="flex h-14 w-14 items-center justify-center rounded-full gradient-brand text-white shadow-lg shadow-primary/30 transition-transform hover:scale-105 active:scale-95"
+                  >
+                    {playing ? (
+                      <Pause size={22} className="fill-current" />
+                    ) : (
+                      <Play size={22} className="fill-current pl-0.5" />
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Próxima"
+                    className="text-foreground/50 transition-colors hover:text-foreground"
+                  >
+                    <SkipForward size={20} />
+                  </button>
                 </div>
               </div>
-
-              <div className="relative mt-6 h-16 overflow-hidden rounded-2xl bg-foreground/90 px-4 py-3 dark:bg-white/10">
-                <Waveform playing={playing} progress={progress} />
-              </div>
-
-              <div className="mt-3 flex items-center justify-between text-xs font-medium text-muted">
-                <span>{formatTime(elapsed)}</span>
-                <span>{formatTime(duration)}</span>
-              </div>
-
-              <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-foreground/[0.08]">
-                <div
-                  className="h-full rounded-full gradient-brand transition-[width] duration-100"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-
-              <div className="mt-5 flex items-center justify-center gap-6">
-                <button
-                  type="button"
-                  aria-label="Anterior"
-                  className="text-foreground/50 transition-colors hover:text-foreground"
-                >
-                  <SkipBack size={20} />
-                </button>
-                <button
-                  type="button"
-                  aria-label={playing ? "Pausar" : "Tocar"}
-                  onClick={handleTogglePlay}
-                  className="flex h-14 w-14 items-center justify-center rounded-full gradient-brand text-white shadow-lg shadow-primary/30 transition-transform hover:scale-105 active:scale-95"
-                >
-                  {playing ? (
-                    <Pause size={22} className="fill-current" />
-                  ) : (
-                    <Play size={22} className="fill-current pl-0.5" />
-                  )}
-                </button>
-                <button
-                  type="button"
-                  aria-label="Próxima"
-                  className="text-foreground/50 transition-colors hover:text-foreground"
-                >
-                  <SkipForward size={20} />
-                </button>
-              </div>
             </div>
+
+            {/* Floating stat card */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.65 }}
+              className="glass absolute -bottom-6 -right-4 hidden rounded-2xl px-4 py-3 shadow-xl sm:block"
+            >
+              <div className="flex items-center gap-2 text-primary">
+                <Lock size={18} />
+              </div>
+              <p className="mt-1 text-sm font-bold">Pix Seguro</p>
+            </motion.div>
           </div>
-
-          {/* Floating stat cards */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="glass absolute -left-6 -top-6 hidden rounded-2xl px-4 py-3 shadow-xl sm:block"
-          >
-            <div className="flex items-center gap-2 text-primary">
-              <UserCheck size={18} />
-            </div>
-            <p className="mt-1 text-sm font-bold">Atendimento 100% Humano</p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.65 }}
-            className="glass absolute -bottom-6 -right-4 hidden rounded-2xl px-4 py-3 shadow-xl sm:block"
-          >
-            <div className="flex items-center gap-2 text-primary">
-              <Lock size={18} />
-            </div>
-            <p className="mt-1 text-sm font-bold">Pagamento Seguro via Pix</p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-            className="glass absolute -bottom-8 left-1/3 hidden rounded-2xl px-4 py-2.5 shadow-xl md:block"
-          >
-            <p className="text-xs font-semibold text-foreground/80">⚡ Entrega em Até 1 Hora</p>
-          </motion.div>
         </motion.div>
       </div>
     </section>

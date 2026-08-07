@@ -19,6 +19,8 @@ export type CampaignTestimonial = {
   initials: string;
   rating: number;
   review: string;
+  /** A real screenshot backing this review. Width/height are the source file's actual pixel size (Next/Image needs it to avoid layout shift — display size is controlled by CSS separately). */
+  screenshot?: { src: string; width: number; height: number };
 };
 
 export type CampaignBanner = {

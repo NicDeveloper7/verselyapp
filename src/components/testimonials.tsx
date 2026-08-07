@@ -2,8 +2,11 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Quote, Star } from "lucide-react";
+import Image from "next/image";
+import { ChevronLeft, ChevronRight, PenLine, Quote, Star } from "lucide-react";
 import { ScrollReveal } from "@/components/scroll-reveal";
+import { Button } from "@/components/ui/button";
+import { getWhatsAppLink } from "@/lib/whatsapp";
 import type { CampaignTestimonial } from "@/lib/campaigns/types";
 
 export function Testimonials({ testimonials }: { testimonials: CampaignTestimonial[] }) {
@@ -27,7 +30,7 @@ export function Testimonials({ testimonials }: { testimonials: CampaignTestimoni
 
   return (
     <section id="testimonials" className="py-24 sm:py-32">
-      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <ScrollReveal className="mx-auto max-w-2xl text-center">
           <h2 className="text-balance font-heading text-3xl font-bold tracking-tight sm:text-4xl">
             Histórias Que Já Emocionaram Pais e Filhos
@@ -39,11 +42,6 @@ export function Testimonials({ testimonials }: { testimonials: CampaignTestimoni
 
         <div className="relative mt-14">
           <div className="relative min-h-[280px] overflow-hidden rounded-2xl border border-border bg-foreground/[0.02] p-8 sm:p-12">
-            <Quote
-              className="absolute right-8 top-8 text-primary/10"
-              size={64}
-              strokeWidth={1.5}
-            />
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
                 key={current.name}
@@ -52,25 +50,44 @@ export function Testimonials({ testimonials }: { testimonials: CampaignTestimoni
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: direction * -40 }}
                 transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                className="relative"
+                className="relative flex flex-col-reverse items-center gap-8 sm:flex-row sm:items-start"
               >
-                <div className="flex text-accent">
-                  {Array.from({ length: current.rating }).map((_, i) => (
-                    <Star key={i} size={16} className="fill-current" />
-                  ))}
-                </div>
-                <p className="mt-5 text-balance text-lg leading-relaxed sm:text-xl">
-                  “{current.review}”
-                </p>
-                <div className="mt-7 flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full gradient-brand text-sm font-bold text-white">
-                    {current.initials}
+                <div className="relative flex-1">
+                  <Quote
+                    className="absolute -left-1 -top-1 text-primary/10"
+                    size={56}
+                    strokeWidth={1.5}
+                  />
+                  <div className="relative flex text-accent">
+                    {Array.from({ length: current.rating }).map((_, i) => (
+                      <Star key={i} size={16} className="fill-current" />
+                    ))}
                   </div>
-                  <div>
-                    <p className="font-semibold">{current.name}</p>
-                    {current.location && <p className="text-sm text-muted">{current.location}</p>}
+                  <p className="relative mt-5 text-balance text-lg leading-relaxed sm:text-xl">
+                    “{current.review}”
+                  </p>
+                  <div className="relative mt-7 flex items-center gap-3">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-full gradient-brand text-sm font-bold text-white">
+                      {current.initials}
+                    </div>
+                    <div>
+                      <p className="font-semibold">{current.name}</p>
+                      {current.location && <p className="text-sm text-muted">{current.location}</p>}
+                    </div>
                   </div>
                 </div>
+
+                {current.screenshot && (
+                  <div className="shrink-0">
+                    <Image
+                      src={current.screenshot.src}
+                      alt={`Print da conversa de WhatsApp com ${current.name}`}
+                      width={current.screenshot.width}
+                      height={current.screenshot.height}
+                      className="h-auto max-h-[360px] w-auto max-w-[200px] rounded-xl border border-border object-contain shadow-lg sm:max-w-[220px]"
+                    />
+                  </div>
+                )}
               </motion.div>
             </AnimatePresence>
           </div>
@@ -109,6 +126,19 @@ export function Testimonials({ testimonials }: { testimonials: CampaignTestimoni
             >
               <ChevronRight size={18} />
             </button>
+          </div>
+
+          <div className="mt-8 flex justify-center">
+            <Button
+              href={getWhatsAppLink(
+                "Olá! Sou cliente e quero deixar minha avaliação sobre a música que fiz. 💛"
+              )}
+              external
+              variant="secondary"
+            >
+              <PenLine size={16} />
+              Deixar uma Avaliação
+            </Button>
           </div>
         </div>
       </div>

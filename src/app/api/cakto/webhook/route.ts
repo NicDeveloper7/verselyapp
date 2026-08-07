@@ -18,7 +18,7 @@ export async function POST(request: Request) {
   }
 
   const { data } = body;
-  const match = findMatchingOrder(getPendingOrders(), {
+  const match = findMatchingOrder(await getPendingOrders(), {
     email: data.customer?.email,
     phone: data.customer?.phone,
   });
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true });
   }
 
-  markOrderApproved(match.id, {
+  await markOrderApproved(match.id, {
     caktoOrderId: data.id,
     caktoRefId: data.refId,
     paidAmountCents: Math.round(data.amount * 100),

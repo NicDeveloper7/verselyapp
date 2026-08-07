@@ -1,4 +1,4 @@
-import { Check, Crown } from "lucide-react";
+import { Check, Flame } from "lucide-react";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { Button } from "@/components/ui/button";
 import { plans } from "@/lib/plans";
@@ -33,7 +33,7 @@ export function PricingPlans({ campaign }: { campaign: Campaign }) {
                 >
                   {plan.tagline && (
                     <span className="absolute -top-3 left-1/2 inline-flex -translate-x-1/2 items-center gap-1 rounded-full gradient-brand px-3 py-1 text-xs font-bold text-white shadow-md">
-                      <Crown size={12} className="fill-current" />
+                      <Flame size={12} className="fill-current" />
                       {plan.tagline}
                     </span>
                   )}

@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.resolve(__dirname),
   },
-  serverExternalPackages: ["better-sqlite3"],
+  serverExternalPackages: ["@libsql/client"],
 };
 
 export default nextConfig;
