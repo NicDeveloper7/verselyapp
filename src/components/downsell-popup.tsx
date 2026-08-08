@@ -16,9 +16,10 @@ export function DownsellPopup() {
   const [secondsLeft, setSecondsLeft] = useState(COUNTDOWN_SECONDS);
   const shownRef = useRef(false);
 
-  // Trigger: whichever comes first — 45s on the page, or the classic
-  // desktop "mouse heading for the tab bar" exit intent. Time-based is
-  // what actually fires on mobile, where most of this traffic comes from.
+  // Purely time-based on purpose — an earlier "mouse leaves near the top
+  // of the page" exit-intent trigger turned out unreliable across
+  // browsers/devices (false positives from normal scrolling/touch), so
+  // it was dropped in favor of this one predictable trigger.
   useEffect(() => {
     if (!downsellOffer.checkoutUrl) return;
     if (sessionStorage.getItem(SESSION_KEY)) return;
@@ -31,22 +32,7 @@ export function DownsellPopup() {
     }
 
     const timer = setTimeout(trigger, TIME_TRIGGER_MS);
-
-    // Touch browsers sometimes synthesize mouseout events on scroll/tap,
-    // which was firing this "exit intent" on mobile too. Only real
-    // mouse-driven devices (hover + fine pointer) get this listener.
-    const hasMouse = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-    function onMouseOut(e: MouseEvent) {
-      if (e.clientY <= 0) trigger();
-    }
-    if (hasMouse) {
-      document.addEventListener("mouseout", onMouseOut);
-    }
-
-    return () => {
-      clearTimeout(timer);
-      if (hasMouse) document.removeEventListener("mouseout", onMouseOut);
-    };
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
