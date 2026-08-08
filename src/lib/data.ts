@@ -3,13 +3,13 @@ export const steps = [
     number: "01",
     title: "Conte Sua História",
     description:
-      "Clique no botão e fale com nosso time pelo WhatsApp. Conte uma lembrança, um apelido, algo que só vocês dois entendem — atendimento 100% humano, sem formulário.",
+      "Preencha o formulário guiado com uma lembrança, um apelido, algo que só vocês dois entendem — leva só alguns minutos.",
   },
   {
     number: "02",
     title: "Escolha Seu Estilo Musical",
     description:
-      "Escolha o gênero e o clima que combinam — de baladas emotivas a hinos animados — e confirme com um Pix seguro, direto na conversa.",
+      "Escolha o gênero e o clima que combinam — de baladas emotivas a hinos animados — e finalize com um pagamento seguro via Pix ou cartão.",
   },
   {
     number: "03",
@@ -56,7 +56,7 @@ export const faqs = [
   {
     question: "Como funciona o pagamento?",
     answer:
-      "É simples: você fala com a nossa equipe pelo WhatsApp, combina os detalhes da música e paga via Pix, direto na conversa. Assim que o pagamento é confirmado, começamos a produção.",
+      "É simples: você preenche um formulário rápido contando a história, escolhe o plano e paga com segurança (Pix ou cartão) direto no site. Assim que o pagamento é confirmado, começamos a produção.",
   },
   {
     question: "Vou falar com uma pessoa de verdade ou com um robô?",

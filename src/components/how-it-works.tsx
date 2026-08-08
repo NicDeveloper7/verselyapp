@@ -16,7 +16,7 @@ export function HowItWorks() {
             Como Funciona
           </h2>
           <p className="mt-4 text-lg text-muted">
-            Da sua história a uma música pronta em quatro passos simples — tudo pelo WhatsApp, com atendimento humano.
+            Da sua história a uma música pronta em quatro passos simples — com atendimento humano em cada etapa.
           </p>
         </ScrollReveal>
 
