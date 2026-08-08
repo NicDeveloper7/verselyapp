@@ -26,7 +26,7 @@ export const fathersDayCampaign: Campaign = {
     headline: "Um Presente Que Vai",
     headlineHighlight: "Emocionar Seu Pai de Verdade",
     subheadline:
-      "Conte pra gente a história de vocês dois e receba uma música só dele em até 1 hora — pronta para guardar (e ouvir) para sempre.",
+      "Conte pra gente a história de vocês e receba uma música só dele em até 1 hora — pronta para guardar (e ouvir) para sempre.",
     primaryCta: "Quero Emocionar Meu Pai 🎁",
     secondaryCta: "Ouvir Exemplos do Dia dos Pais",
     playerTitle: "O Homem Que Me Criou",

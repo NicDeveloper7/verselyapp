@@ -5,7 +5,7 @@ type ButtonProps = {
   children: ReactNode;
   href?: string;
   external?: boolean;
-  variant?: "primary" | "secondary" | "ghost" | "pay";
+  variant?: "primary" | "secondary" | "ghost";
   size?: "md" | "lg";
   className?: string;
   onClick?: () => void;
@@ -22,10 +22,6 @@ const variants: Record<NonNullable<ButtonProps["variant"]>, string> = {
   secondary:
     "bg-foreground/[0.04] text-foreground border border-border hover:bg-foreground/[0.08] hover:-translate-y-0.5",
   ghost: "text-foreground hover:bg-foreground/[0.06]",
-  // Reserved for the one true "pay now" action — everything else on the
-  // site stays on-brand purple/pink so this reads as visibly different
-  // the moment it matters.
-  pay: "text-white bg-gradient-to-r from-emerald-500 to-green-600 shadow-lg shadow-emerald-600/30 hover:shadow-xl hover:shadow-emerald-600/40 hover:-translate-y-0.5 active:translate-y-0",
 };
 
 const sizes: Record<NonNullable<ButtonProps["size"]>, string> = {

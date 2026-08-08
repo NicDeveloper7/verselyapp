@@ -53,7 +53,7 @@ export const plans: Plan[] = [
     priceCents: 6790,
     features: [
       "Tudo do Emocionante, mais:",
-      "Vídeo personalizado com fotos do seu pai e de vocês dois",
+      "Vídeo personalizado com fotos do seu pai e da família",
       "Entrega prioritária máxima",
     ],
     checkoutUrl: "https://pay.cakto.com.br/featqsr_1025538",

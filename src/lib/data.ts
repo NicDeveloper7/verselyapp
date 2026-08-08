@@ -3,7 +3,7 @@ export const steps = [
     number: "01",
     title: "Conte Sua História",
     description:
-      "Preencha o formulário guiado com uma lembrança, um apelido, algo que só vocês dois entendem — leva só alguns minutos.",
+      "Preencha o formulário guiado com uma lembrança, um apelido, algo que só vocês entendem — leva só alguns minutos.",
   },
   {
     number: "02",

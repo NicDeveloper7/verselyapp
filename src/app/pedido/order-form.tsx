@@ -276,7 +276,7 @@ export function OrderForm({ campaign }: { campaign: Campaign }) {
           {screen === "story" && (
             <div>
               <h1 className="font-heading text-2xl font-bold">Conte a história de vocês</h1>
-              <p className="mt-1 text-sm text-muted">Uma lembrança, um apelido, algo que só vocês dois entendem.</p>
+              <p className="mt-1 text-sm text-muted">Uma lembrança, um apelido, algo que só vocês entendem.</p>
               <textarea
                 autoFocus
                 required
@@ -361,7 +361,6 @@ export function OrderForm({ campaign }: { campaign: Campaign }) {
 
               <Button
                 type="submit"
-                variant="pay"
                 size="lg"
                 disabled={loading || !canSubmit}
                 className="mt-6 w-full"
