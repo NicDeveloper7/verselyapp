@@ -7,19 +7,22 @@ import { Button } from "@/components/ui/button";
 import { PRICE } from "@/lib/pricing";
 import { downsellOffer, DOWNSELL_OFFER_ID } from "@/lib/downsell";
 
-const TIME_TRIGGER_MS = 20_000;
+const IDLE_MS = 20_000;
 const COUNTDOWN_SECONDS = 10 * 60;
 const SESSION_KEY = "downsell_shown";
+const ACTIVITY_EVENTS = ["scroll", "mousemove", "touchstart", "touchmove", "keydown", "click"] as const;
 
 export function DownsellPopup() {
   const [visible, setVisible] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(COUNTDOWN_SECONDS);
   const shownRef = useRef(false);
 
-  // Purely time-based on purpose — an earlier "mouse leaves near the top
-  // of the page" exit-intent trigger turned out unreliable across
-  // browsers/devices (false positives from normal scrolling/touch), so
-  // it was dropped in favor of this one predictable trigger.
+  // Idle-based, not "20s since page load": any scroll/touch/click/keypress
+  // resets the clock, so this only fires once someone has genuinely
+  // stopped interacting for IDLE_MS. A stray synthetic event (iOS Safari
+  // fires mouse events on touch) can at worst reset the timer and delay
+  // the popup slightly — it can never cause an early/incorrect trigger,
+  // unlike the old mouseout-based exit-intent this replaced.
   useEffect(() => {
     if (!downsellOffer.checkoutUrl) return;
     if (sessionStorage.getItem(SESSION_KEY)) return;
@@ -31,8 +34,19 @@ export function DownsellPopup() {
       sessionStorage.setItem(SESSION_KEY, "1");
     }
 
-    const timer = setTimeout(trigger, TIME_TRIGGER_MS);
-    return () => clearTimeout(timer);
+    let idleTimer: ReturnType<typeof setTimeout>;
+    function resetIdleTimer() {
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(trigger, IDLE_MS);
+    }
+
+    resetIdleTimer();
+    ACTIVITY_EVENTS.forEach((evt) => window.addEventListener(evt, resetIdleTimer, { passive: true }));
+
+    return () => {
+      clearTimeout(idleTimer);
+      ACTIVITY_EVENTS.forEach((evt) => window.removeEventListener(evt, resetIdleTimer));
+    };
   }, []);
 
   useEffect(() => {
